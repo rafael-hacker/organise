@@ -24,7 +24,7 @@ static std::filesystem::path getUniquePath(const std::filesystem::path& destPath
     return uniquePath;
 }
 
-// Forward declaration -- defined near processDirectory below.
+// Forward declaration, defined near processDirectory below.
 static bool isSubPath(const std::filesystem::path& base, const std::filesystem::path& candidate);
 
 static ConflictMode promptUserConflict(const std::filesystem::path& filename) {
@@ -54,6 +54,7 @@ void handleFile(const std::filesystem::directory_entry& entry, const nlohmann::j
 
     std::filesystem::path destDir;
     bool found = false;
+    std::string matchedPattern;
 
     for (auto& [pattern, path] : rules.items()) {
         // If it is regex (ex: ".*\\.pdf" ou "^Work_.*")
@@ -61,11 +62,22 @@ void handleFile(const std::filesystem::directory_entry& entry, const nlohmann::j
         if (std::regex_match(filename, re) || (pattern == ext)) {
             destDir = path.get<std::filesystem::path>();
             found = true;
+            matchedPattern = pattern;
             break;
         }
     }
 
-    if (!found) return;
+    if (!found) {
+        if (opts.verbose) {
+            std::cout << color::cyan << "[VERBOSE] No matching rule for '" << filename << "', leaving in place." << color::reset << std::endl;
+        }
+        return;
+    }
+
+    if (opts.verbose) {
+        std::cout << color::cyan << "[VERBOSE] '" << filename << "' matched rule '" << matchedPattern
+                   << "' -> " << destDir.string() << color::reset << std::endl;
+    }
 
     if (opts.recursive && isSubPath(opts.targetDir, destDir)) {
         std::cerr << color::red << "Skipped " << filename
@@ -145,7 +157,7 @@ void processDirectory(const nlohmann::json& rules, const Options& opts) {
         return;
     }
 
-    // Collect the full file list BEFORE moving anything. Moving files while a 
+    // Collect the full file list BEFORE moving anything. Moving files while a
     // std::filesystem::recursive_directory_iterator is actively walking the same tree is undefined behavior
     std::vector<std::filesystem::path> files;
     if (opts.recursive) {
@@ -159,7 +171,15 @@ void processDirectory(const nlohmann::json& rules, const Options& opts) {
         }
     }
 
+    if (opts.verbose) {
+        std::cout << color::cyan << "[VERBOSE] Scanning " << opts.targetDir.string()
+                   << (opts.recursive ? " (recursive)" : "") << " -- found " << files.size()
+                   << " file(s) to check." << color::reset << std::endl;
+    }
+
     for (const auto& filePath : files) {
+        // The file may have already been moved by an earlier iteration (e.g.
+        // duplicate rules), or removed externally -- skip if it's gone.
         if (!std::filesystem::exists(filePath)) continue;
         handleFile(std::filesystem::directory_entry(filePath), rules, opts);
     }
