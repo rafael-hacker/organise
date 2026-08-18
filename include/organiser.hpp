@@ -1,10 +1,11 @@
 #pragma once
 
+#include "../include/options.hpp"
 #include <filesystem>
 #include <nlohmann/json.hpp>
 
 namespace organise {
 
-void processDirectory(const std::filesystem::path& targetDir, const nlohmann::json& rules);
+void processDirectory(const nlohmann::json& rules, const Options& opts);
 
 } // namespace organise
