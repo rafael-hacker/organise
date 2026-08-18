@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
     }
 
     if (opts.targetDir.empty()) {
-        std::cerr << color:red << "Error: Target directory is needed." << color::reset << std::endl;
+        std::cerr << color::red << "Error: Target directory is needed." << color::reset << std::endl;
         organise::printHelp();
         return 1;
     }
