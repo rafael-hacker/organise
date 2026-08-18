@@ -1,5 +1,5 @@
-#include "config.hpp"
-#include "organiser.hpp"
+#include "include/config.hpp"
+#include "include/organiser.hpp"
 #include <iostream>
 
 int main(int argc, char* argv[]) {
