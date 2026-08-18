@@ -1,5 +1,5 @@
-#include "../include/config.hpp"
-#include "../include/colors.hpp"
+#include "organise/config.hpp"
+#include "organise/colors.hpp"
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -7,6 +7,11 @@
 namespace organise {
 
 std::filesystem::path getDefaultConfigPath() {
+    const char* xdgConfig = std::getenv("XDG_CONFIG_HOME");
+    if (xdgConfig && xdgConfig[0] != '\0') {
+        return std::filesystem::path(xdgConfig) / "organise" / "config.json";
+    }
+
     const char* homeDir = std::getenv("HOME");
     if (!homeDir) {
         return {};

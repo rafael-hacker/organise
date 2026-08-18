@@ -35,6 +35,17 @@ cmake --build build
 sudo cmake --install build
 ```
 
+### 🐧 Arch Linux (AUR)
+You can install `organise` from the Arch User Repository using your favorite AUR helper:
+
+```bash
+# Stable version
+paru/yay -S organise
+
+# Latest development version (Git)
+paru/yay -S organise-git
+```
+
 ## ⚙️ How to Configure
 The tool reads its configuration from the user's home directory at  `~/.config/organise/config.json`.
 

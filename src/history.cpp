@@ -1,5 +1,5 @@
-#include "../include/history.hpp"
-#include "../include/colors.hpp"
+#include "organise/history.hpp"
+#include "organise/colors.hpp"
 #include <nlohmann/json.hpp>
 #include <filesystem>
 #include <fstream>
@@ -9,9 +9,17 @@
 namespace organise::history {
 
 static std::filesystem::path getHistoryPath() {
-    const char* home = std::getenv("HOME");
-    std::filesystem::path dir = home ? std::filesystem::path(home) / ".local" / "state" / "organise" : std::filesystem::current_path();
+    std::filesystem::path baseDir;
+    const char* xdgState = std::getenv("XDG_STATE_HOME");
     
+    if (xdgState && xdgState[0] != '\0') {
+        baseDir = std::filesystem::path(xdgState);
+    } else {
+        const char* home = std::getenv("HOME");
+        baseDir = home ? std::filesystem::path(home) / ".local" / "state" : std::filesystem::current_path();
+    }
+    
+    std::filesystem::path dir = baseDir / "organise";
     if (!std::filesystem::exists(dir)) {
         std::filesystem::create_directories(dir);
     }

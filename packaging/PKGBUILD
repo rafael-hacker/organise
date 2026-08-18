@@ -1,0 +1,25 @@
+# Maintainer: Guilherme leonsombrio244@gmail.com
+pkgname=organise
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Automatically sort and move files into designated directories based on their extensions"
+arch=('x86_64')
+url="https://github.com/rafael-hacker/organise"
+license=('MIT')
+depends=('gcc-libs')
+makedepends=('cmake' 'nlohmann-json')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
+sha256sums=('SKIP')  # replace with a real checksum once v$pkgver is actually tagged -- see note below
+
+build() {
+    cmake -B build -S "$pkgname-$pkgver" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr
+    cmake --build build
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+    install -Dm644 "$pkgname-$pkgver/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

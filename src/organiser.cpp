@@ -1,6 +1,6 @@
-#include "../include/organiser.hpp"
-#include "../include/history.hpp"
-#include "../include/colors.hpp"
+#include "organise/organiser.hpp"
+#include "organise/history.hpp"
+#include "organise/colors.hpp"
 #include <iostream>
 #include <cctype>
 #include <algorithm> // Needed for std::transform
@@ -35,9 +35,11 @@ static ConflictMode promptUserConflict(const std::filesystem::path& filename) {
                   << "  [o]verwrite\n" << color::reset
                   << "Choose [r/s/o]: ";
 
-        char choice;
-        std::cin >> choice;
-        choice = static_cast<char>(std::tolower(choice));
+	std::string input;
+	std::getline(std::cin, input);
+
+	if (input.empty()) continue;
+	char choice = static_cast<char>(std::tolower(input[0]));
 
         if (choice == 'r') return ConflictMode::Rename;
         if (choice == 's') return ConflictMode::Skip;
@@ -57,13 +59,23 @@ void handleFile(const std::filesystem::directory_entry& entry, const nlohmann::j
     std::string matchedPattern;
 
     for (auto& [pattern, path] : rules.items()) {
-        // If it is regex (ex: ".*\\.pdf" ou "^Work_.*")
-        std::regex re(pattern);
-        if (std::regex_match(filename, re) || (pattern == ext)) {
+	if (pattern == ext) {
             destDir = path.get<std::filesystem::path>();
             found = true;
             matchedPattern = pattern;
             break;
+        }
+
+        try {
+            std::regex re(pattern);
+            if (std::regex_match(filename, re)) {
+                destDir = path.get<std::filesystem::path>();
+                found = true;
+                matchedPattern = pattern;
+                break;
+            }
+        } catch (const std::regex_error&) {
+		/* No need for nothing here */
         }
     }
 

@@ -1,0 +1,40 @@
+.TH ORG 1 "August 2026" "org (organise)" "User Commands"
+.SH NAME
+org \- Automatically sort and move files into designated directories
+.SH SYNOPSIS
+.B org
+[\fIOPTIONS\fR] [\fIDIRECTORY\fR]
+.SH DESCRIPTION
+.B org
+is a fast, C++ based command-line tool that automatically organizes files in a directory based on predefined rules. It supports regex matching, extension grouping, and continuous watching using inotify.
+.SH OPTIONS
+.TP
+.BR \-n ", " \-\-dry\-run
+Simulate actions without actually doing them.
+.TP
+.BR \-r ", " \-\-recursive
+Scan directories recursively.
+.TP
+.BR \-v ", " \-\-verbose
+Display detailed execution output.
+.TP
+.BR \-y ", " \-\-auto\-rename
+Automatically rename conflicting files without prompting the user.
+.TP
+.BR \-\-conflict=\fIMODE\fR
+Set conflict strategy. Valid modes are: \fIrename\fR, \fIskip\fR, or \fIoverwrite\fR.
+.TP
+.BR \-w ", " \-\-watch
+Watch the directory continuously and organise new files as they are created or moved in.
+.TP
+.BR \-c ", " \-\-config=\fIFILE\fR
+Use a specific configuration file instead of the default paths.
+.TP
+.BR \-u ", " \-\-undo
+Undo the last batch of moves, using the history log.
+.TP
+.BR \-h ", " \-\-help
+Display a help message and exit.
+.TP
+.BR \-V ", " \-\-version
+Display the project's version and exit.

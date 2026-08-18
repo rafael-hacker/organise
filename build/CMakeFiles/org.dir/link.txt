@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/org.dir/link.d CMakeFiles/org.dir/src/main.cpp.o CMakeFiles/org.dir/src/config.cpp.o CMakeFiles/org.dir/src/options.cpp.o CMakeFiles/org.dir/src/organiser.cpp.o CMakeFiles/org.dir/src/history.cpp.o CMakeFiles/org.dir/src/watcher.cpp.o -o org

@@ -1,6 +1,6 @@
-#include "../include/options.hpp"
-#include "../include/config.hpp"
-#include "../include/colors.hpp"
+#include "organise/options.hpp"
+#include "organise/config.hpp"
+#include "organise/colors.hpp"
 #include <iostream>
 #include <string_view>
 

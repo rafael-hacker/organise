@@ -1,0 +1,13 @@
+/home/elliot/Projects/organise/build/CMakeFiles/org.dir
+/home/elliot/Projects/organise/build/CMakeFiles/edit_cache.dir
+/home/elliot/Projects/organise/build/CMakeFiles/rebuild_cache.dir
+/home/elliot/Projects/organise/build/CMakeFiles/list_install_components.dir
+/home/elliot/Projects/organise/build/CMakeFiles/install.dir
+/home/elliot/Projects/organise/build/CMakeFiles/install/local.dir
+/home/elliot/Projects/organise/build/CMakeFiles/install/strip.dir
+/home/elliot/Projects/organise/build/_deps/nlohmann_json-build/CMakeFiles/edit_cache.dir
+/home/elliot/Projects/organise/build/_deps/nlohmann_json-build/CMakeFiles/rebuild_cache.dir
+/home/elliot/Projects/organise/build/_deps/nlohmann_json-build/CMakeFiles/list_install_components.dir
+/home/elliot/Projects/organise/build/_deps/nlohmann_json-build/CMakeFiles/install.dir
+/home/elliot/Projects/organise/build/_deps/nlohmann_json-build/CMakeFiles/install/local.dir
+/home/elliot/Projects/organise/build/_deps/nlohmann_json-build/CMakeFiles/install/strip.dir
