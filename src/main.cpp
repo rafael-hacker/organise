@@ -1,28 +1,27 @@
 #include "config.hpp"
-#include <cstdlib>
-#include <fstream>
+#include "organiser.hpp"
 #include <iostream>
 
-namespace organise {
-
-std::filesystem::path getDefaultConfigPath() {
-    const char* homeDir = std::getenv("HOME");
-    if (!homeDir) {
-        return {};
-    }
-    return std::filesystem::path(homeDir) / ".config" / "organise" / "config.json";
-}
-
-json loadConfig(const std::filesystem::path& path) {
-    std::ifstream file(path);
-    if (!file.is_open()) {
-        std::cerr << "Error: couldn't open config file in " << path << std::endl;
-        return nullptr;
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        std::cout << "Usage: org <path>" << std::endl;
+        return 1;
     }
 
-    json data;
-    file >> data;
-    return data;
-}
+    std::filesystem::path targetDir = argv[1];
+    std::filesystem::path configPath = organise::getDefaultConfigPath();
 
-} // namespace organise
+    if (configPath.empty()) {
+        std::cerr << "Error: HOME Variable not found." << std::endl;
+        return 1;
+    }
+
+    auto rules = organise::loadConfig(configPath);
+    if (rules.is_null()) {
+        return 1;
+    }
+
+    organise::processDirectory(targetDir, rules);
+
+    return 0;
+}
