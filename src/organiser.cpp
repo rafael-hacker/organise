@@ -4,12 +4,6 @@
 
 namespace organise {
 
-enum class ConflictAction {
-    Rename,
-    Skip,
-    Overwrite
-};
-
 static std::filesystem::path getUniquePath(const std::filesystem::path& destPath) {
     auto parent = destPath.parent_path();
     auto stem = destPath.stem().string();
@@ -25,71 +19,89 @@ static std::filesystem::path getUniquePath(const std::filesystem::path& destPath
     return uniquePath;
 }
 
-static ConflictAction promptUserConflict(const std::filesystem::path& filename) {
+static ConflictMode promptUserConflict(const std::filesystem::path& filename) {
     while (true) {
-        std::cout << "The file '" << filename.string() << "' already exists.\n"
+        std::cout << "The file '" << filename.string() << "' Already exists.\n"
                   << "  [r]ename (as " << filename.stem().string() << " (1)" << filename.extension().string() << ")\n"
                   << "  [s]kip\n"
-                  << "  [o]verwrite \n"
+                  << "  [o]verwrite\n"
                   << "Choose [r/s/o]: ";
 
         char choice;
         std::cin >> choice;
         choice = static_cast<char>(std::tolower(choice));
 
-        if (choice == 'r') return ConflictAction::Rename;
-        if (choice == 's') return ConflictAction::Skip;
-        if (choice == 'o') return ConflictAction::Overwrite;
+        if (choice == 'r') return ConflictMode::Rename;
+        if (choice == 's') return ConflictMode::Skip;
+        if (choice == 'o') return ConflictMode::Overwrite;
 
         std::cout << "Invalid option! Try again.\n\n";
     }
 }
 
-void processDirectory(const std::filesystem::path& targetDir, const nlohmann::json& rules, bool dryRun) {
-    if (!std::filesystem::exists(targetDir) || !std::filesystem::is_directory(targetDir)) {
-        std::cerr << "Error: Invalid directory " << targetDir << std::endl;
+static void handleFile(const std::filesystem::directory_entry& entry, const nlohmann::json& rules, const Options& opts) {
+    auto ext = entry.path().extension();
+    auto filename = entry.path().filename();
+
+    auto it = rules.find(ext);
+    if (it == rules.end()) {
+        if (opts.verbose) {
+            std::cout << "[VERBOSE] No rule for the extension: " << ext << " (" << filename << ")\n";
+        }
         return;
     }
 
-    for (const auto& entry : std::filesystem::directory_iterator(targetDir)) {
-        if (entry.is_regular_file()) {
-            auto ext = entry.path().extension();
-            auto filename = entry.path().filename();
+    std::filesystem::path destDir = it.value().get<std::filesystem::path>();
 
-            auto it = rules.find(ext);
-            if (it != rules.end()) {
-                std::filesystem::path destDir = it.value().get<std::filesystem::path>();
+    if (!opts.dryRun && !std::filesystem::exists(destDir)) {
+        std::filesystem::create_directories(destDir);
+    }
 
-                if (!dryRun && !std::filesystem::exists(destDir)) {
-                    std::filesystem::create_directories(destDir);
-                }
+    std::filesystem::path destPath = destDir / filename;
 
-                std::filesystem::path destPath = destDir / filename;
+    if (std::filesystem::exists(destPath)) {
+        if (opts.dryRun) {
+            std::cout << "[DRY-RUN] Conflit detected for: " << filename << "\n";
+            return;
+        }
 
-                if (std::filesystem::exists(destPath)) {
-                    if (dryRun) {
-                        std::cout << "[DRY-RUN] Conflit detected for: " << filename << std::endl;
-                        continue;
-                    }
+        ConflictMode action = opts.conflictMode;
+        if (action == ConflictMode::Interactive) {
+            action = promptUserConflict(filename);
+        }
 
-                    ConflictAction action = promptUserConflict(filename);
+        if (action == ConflictMode::Skip) {
+            std::cout << "Skipped: " << filename << "\n";
+            return;
+        } else if (action == ConflictMode::Rename) {
+            destPath = getUniquePath(destPath);
+        }
+    }
 
-                    if (action == ConflictAction::Skip) {
-                        std::cout << "Skipped: " << filename << std::endl;
-                        continue;
-                    } 
-                    else if (action == ConflictAction::Rename) {
-                        destPath = getUniquePath(destPath);
-                    } 
-                    // If Overwrite, keeps destPath
-                }
+    if (opts.dryRun) {
+        std::cout << "[DRY-RUN] Would move: " << filename << " -> " << destPath << "\n";
+    } else {
+        std::filesystem::rename(entry.path(), destPath);
+        std::cout << "Moved: " << filename << " -> " << destPath << "\n";
+    }
+}
 
-                if (dryRun) {
-                    std::cout << "[DRY-RUN] Would move: " << filename << " -> " << destPath << std::endl;
-                } else {
-                    std::filesystem::rename(entry.path(), destPath);
-                    std::cout << "Moved: " << filename << " -> " << destPath << std::endl;
-                }
+void processDirectory(const nlohmann::json& rules, const Options& opts) {
+    if (!std::filesystem::exists(opts.targetDir) || !std::filesystem::is_directory(opts.targetDir)) {
+        std::cerr << "Error: Invalid directory " << opts.targetDir << std::endl;
+        return;
+    }
+
+    if (opts.recursive) {
+        for (const auto& entry : std::filesystem::recursive_directory_iterator(opts.targetDir)) {
+            if (entry.is_regular_file()) {
+                handleFile(entry, rules, opts);
+            }
+        }
+    } else {
+        for (const auto& entry : std::filesystem::directory_iterator(opts.targetDir)) {
+            if (entry.is_regular_file()) {
+                handleFile(entry, rules, opts);
             }
         }
     }
