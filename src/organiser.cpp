@@ -61,17 +61,21 @@ static void handleFile(const std::filesystem::directory_entry& entry, const nloh
             break;
         }
     }
-    
+
     if (!found) return;
 
-    std::filesystem::path destDir = it.value().get<std::filesystem::path>();
+    // (removed the duplicate/broken `destDir` redeclaration that referenced `it`)
 
     if (!opts.dryRun && !std::filesystem::exists(destDir)) {
         std::filesystem::create_directories(destDir);
     }
 
+    if (!opts.dryRun && !std::filesystem::exists(destDir)) {
+        std::filesystem::create_directories(destDir);
+    }
+    
     std::filesystem::path destPath = destDir / filename;
-
+    
     if (std::filesystem::exists(destPath)) {
         if (opts.dryRun) {
             std::cout << color::yellow << "[DRY-RUN] Conflict detected for: " << filename.string() << color::reset << std::endl;
