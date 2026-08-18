@@ -2,6 +2,7 @@
 #include "../include/options.hpp"
 #include "../include/organiser.hpp"
 #include <iostream>
+#include <fstream>
 
 int main(int argc, char* argv[]) {
     auto opts = organise::parseArgs(argc, argv);
@@ -22,6 +23,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    std::ofstream file(opts.configPath, std::ios::app);
     auto rules = organise::loadConfig(opts.configPath);
     if (rules.is_null()) {
         return 1;
