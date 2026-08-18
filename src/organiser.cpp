@@ -44,7 +44,7 @@ static ConflictMode promptUserConflict(const std::filesystem::path& filename) {
     }
 }
 
-static void handleFile(const std::filesystem::directory_entry& entry, const nlohmann::json& rules, const Options& opts) {
+void handleFile(const std::filesystem::directory_entry& entry, const nlohmann::json& rules, const Options& opts) {
     auto filename = entry.path().filename().string();
     auto ext = entry.path().extension().string();
     std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c){ return std::tolower(c); });
