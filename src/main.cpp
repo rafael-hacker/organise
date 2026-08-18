@@ -4,6 +4,7 @@
 #include "../include/colors.hpp"
 #include <iostream>
 
+using namespace organise;
 int main(int argc, char* argv[]) {
     auto opts = organise::parseArgs(argc, argv);
 
