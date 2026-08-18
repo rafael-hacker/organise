@@ -14,6 +14,8 @@ void printHelp() {
               << "  -y, --auto-rename      Automatically rename conflicting files (no prompt)\n"
               << "      --conflict <mode>  Set conflict strategy: rename, skip, or overwrite\n"
               << "  -c, --config <path>    Custom configuration file path\n"
+              << "  -w, --watch            Watch directory continuously and organise new files as they appear\n"
+              << "  -u, --undo             Undo the last batch of moves\n"
               << "  -h, --help             Display this help message\n"
               << "      --version          Display version information\n";
 }
