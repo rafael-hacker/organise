@@ -1,5 +1,6 @@
 #include "../include/options.hpp"
 #include "../include/config.hpp"
+#include "../include/colors.hpp"
 #include <iostream>
 #include <string_view>
 
@@ -49,14 +50,14 @@ Options parseArgs(int argc, char* argv[]) {
             opts.conflictMode = ConflictMode::Rename;
         } else if (arg == "--conflict") {
             if (i + 1 >= argc) {
-                std::cerr << "Error: --conflict requires an argument (rename, skip, or overwrite).\n";
+                std::cerr << color::red << "Error: --conflict requires an argument (rename, skip, or overwrite)." << color::reset << std::endl;
                 continue;
             }
             std::string_view mode = argv[++i];
             if (mode == "skip") opts.conflictMode = ConflictMode::Skip;
             else if (mode == "overwrite") opts.conflictMode = ConflictMode::Overwrite;
             else if (mode == "rename") opts.conflictMode = ConflictMode::Rename;
-            else std::cerr << "Warning: unrecognized --conflict mode '" << mode << "', ignoring.\n";
+            else std::cerr << color::yellow << "Warning: unrecognized --conflict mode '" << mode << "', ignoring." << color::reset << std::endl;
         } else if (arg == "-c" || arg == "--config") {
             if (i + 1 >= argc) {
                 std::cerr << color::red << "Error: " << arg << " requires a path argument." << color::reset << std::endl;
