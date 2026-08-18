@@ -15,7 +15,7 @@ std::filesystem::path getDefaultConfigPath() {
 
 json loadConfig(const std::filesystem::path& path) {
     if (!std::filesystem::exists(path)) {
-        std::cout << "Config file not found. Creating standart config in: " << path << std::endl;
+        std::cout << "Config file not found. Creating standard config in: " << path << std::endl;
 
         if (path.has_parent_path()) {
             std::filesystem::create_directories(path.parent_path());
