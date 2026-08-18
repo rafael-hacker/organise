@@ -28,6 +28,14 @@ void processDirectory(const std::filesystem::path& targetDir, const nlohmann::js
             }
         }
     }
+    std::filesystem::path destPath = destDir / filename;
+
+    if (dryRun) {
+        std::cout << "[DRY-RUN] Would move: " << filename << " -> " << destPath << std::endl;
+    } else {
+        std::filesystem::rename(entry.path(), destPath);
+        std::cout << "Moved: " << filename << " -> " << destPath << std::endl;
+    }
 }
 
 } // namespace organise
