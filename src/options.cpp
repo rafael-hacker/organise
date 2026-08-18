@@ -34,6 +34,9 @@ Options parseArgs(int argc, char* argv[]) {
             opts.recursive = true;
         } else if (arg == "-u" || arg == "--undo") {
             opts.undo = true;
+        } else if (arg == "--watch") {
+            opts.watch = true;
+            continue;
         } else if (arg == "-v" || arg == "--verbose") {
             opts.verbose = true;
         } else if (arg == "-y" || arg == "--auto-rename") {
