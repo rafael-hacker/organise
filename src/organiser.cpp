@@ -45,18 +45,24 @@ static ConflictMode promptUserConflict(const std::filesystem::path& filename) {
 }
 
 static void handleFile(const std::filesystem::directory_entry& entry, const nlohmann::json& rules, const Options& opts) {
-    std::string ext = entry.path().extension().string();
+    auto filename = entry.path().filename().string();
+    auto ext = entry.path().extension().string();
     std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c){ return std::tolower(c); });
 
-    auto filename = entry.path().filename();
+    std::filesystem::path destDir;
+    bool found = false;
 
-    auto it = rules.find(ext);
-    if (it == rules.end()) {
-        if (opts.verbose) {
-            std::cout << color::blue << "[VERBOSE] No rule for the extension: " << ext << " (" << filename.string() << ")\n" << color::reset;
+    for (auto& [pattern, path] : rules.items()) {
+        // If it is regex (ex: ".*\\.pdf" ou "^Work_.*")
+        std::regex re(pattern);
+        if (std::regex_match(filename, re) || (pattern == ext)) {
+            destDir = path.get<std::filesystem::path>();
+            found = true;
+            break;
         }
-        return;
     }
+    
+    if (!found) return;
 
     std::filesystem::path destDir = it.value().get<std::filesystem::path>();
 
