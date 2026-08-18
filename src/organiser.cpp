@@ -22,9 +22,9 @@ static std::filesystem::path getUniquePath(const std::filesystem::path& destPath
 static ConflictMode promptUserConflict(const std::filesystem::path& filename) {
     while (true) {
         std::cout << "The file '" << filename.string() << "' Already exists.\n"
-                  << "  [r]ename (as " << filename.stem().string() << " (1)" << filename.extension().string() << ")\n"
-                  << "  [s]kip\n"
-                  << "  [o]verwrite\n"
+                  << "\033[31m" << "  [r]ename (as " << filename.stem().string() << " (1)" << filename.extension().string() << ")\n"
+                  << "\033[34m" <<"  [s]kip\n"
+                  << "\033[30m" << "  [o]verwrite\n"
                   << "Choose [r/s/o]: ";
 
         char choice;
@@ -35,7 +35,7 @@ static ConflictMode promptUserConflict(const std::filesystem::path& filename) {
         if (choice == 's') return ConflictMode::Skip;
         if (choice == 'o') return ConflictMode::Overwrite;
 
-        std::cout << "Invalid option! Try again.\n\n";
+        std::cout << "\033[31m" << "Invalid option! Try again.\n\n";
     }
 }
 
@@ -46,7 +46,7 @@ static void handleFile(const std::filesystem::directory_entry& entry, const nloh
     auto it = rules.find(ext);
     if (it == rules.end()) {
         if (opts.verbose) {
-            std::cout << "[VERBOSE] No rule for the extension: " << ext << " (" << filename << ")\n";
+            std::cout << "\033[36m" <<"[VERBOSE] No rule for the extension: " << ext << " (" << filename << ")\n";
         }
         return;
     }
@@ -88,7 +88,7 @@ static void handleFile(const std::filesystem::directory_entry& entry, const nloh
 
 void processDirectory(const nlohmann::json& rules, const Options& opts) {
     if (!std::filesystem::exists(opts.targetDir) || !std::filesystem::is_directory(opts.targetDir)) {
-        std::cerr << "Error: Invalid directory " << opts.targetDir << std::endl;
+        std::cerr << "\033[31m" << "Error: Invalid directory " << opts.targetDir << std::endl;
         return;
     }
 

@@ -12,12 +12,12 @@ int main(int argc, char* argv[]) {
     }
 
     if (opts.showVersion) {
-        std::cout << "org version 1.0.0\n";
+        std::cout << "\033[34m" << "org version 1.0.0\n";
         return 0;
     }
 
     if (opts.targetDir.empty()) {
-        std::cerr << "Error: Target directory is needed.\n\n";
+        std::cerr << "\033[31m" << "Error: Target directory is needed.\n\n";
         organise::printHelp();
         return 1;
     }
