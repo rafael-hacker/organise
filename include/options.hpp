@@ -19,6 +19,7 @@ struct Options {
     bool showHelp = false;
     bool showVersion = false;
     bool recursive = false;
+    bool undo = false;
     bool verbose = false;
     ConflictMode conflictMode = ConflictMode::Interactive;
 };
