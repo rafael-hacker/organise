@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
     }
 
     if (opts.targetDir.empty()) {
-        std::cerr << "Error: Target directory path is required.\n\n";
+        std::cerr << "Error: Target directory is needed.\n\n";
         organise::printHelp();
         return 1;
     }
@@ -27,6 +27,6 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    organise::processDirectory(opts.targetDir, rules, opts.dryRun);
+    organise::processDirectory(rules, opts);
     return 0;
 }
