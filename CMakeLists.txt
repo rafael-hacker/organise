@@ -26,6 +26,7 @@ set(SOURCES
     src/options.cpp
     src/organiser.cpp
     src/history.cpp
+    src/watcher.cpp
 )
 
 # Creates 'org' executable
