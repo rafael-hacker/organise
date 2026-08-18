@@ -6,6 +6,7 @@ endif()
 
 project(organise VERSION 1.0.0 LANGUAGES CXX)
 
+# test
 # C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
