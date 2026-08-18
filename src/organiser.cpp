@@ -24,6 +24,9 @@ static std::filesystem::path getUniquePath(const std::filesystem::path& destPath
     return uniquePath;
 }
 
+// Forward declaration -- defined near processDirectory below.
+static bool isSubPath(const std::filesystem::path& base, const std::filesystem::path& candidate);
+
 static ConflictMode promptUserConflict(const std::filesystem::path& filename) {
     while (true) {
         std::cout << color::yellow << "The file '" << filename.string() << "' Already exists.\n" << color::reset << color::blue
@@ -64,10 +67,12 @@ void handleFile(const std::filesystem::directory_entry& entry, const nlohmann::j
 
     if (!found) return;
 
-    // (removed the duplicate/broken `destDir` redeclaration that referenced `it`)
-
-    if (!opts.dryRun && !std::filesystem::exists(destDir)) {
-        std::filesystem::create_directories(destDir);
+    if (opts.recursive && isSubPath(opts.targetDir, destDir)) {
+        std::cerr << color::red << "Skipped " << filename
+                   << ": destination '" << destDir.string()
+                   << "' is inside the recursively-scanned directory, which could cause repeated re-organising."
+                   << color::reset << std::endl;
+        return;
     }
 
     if (!opts.dryRun && !std::filesystem::exists(destDir)) {
@@ -115,25 +120,48 @@ void handleFile(const std::filesystem::directory_entry& entry, const nlohmann::j
     }
 }
 
+// True if candidate is inside (or equal to) base, comparing canonical paths.
+// Used to stop a config rule from sending files into a directory that's part
+// of the very tree we're scanning -- which would otherwise cause moved files
+// to be picked up and re-organised again on a later step of the same scan.
+static bool isSubPath(const std::filesystem::path& base, const std::filesystem::path& candidate) {
+    std::error_code ec;
+    auto canonBase = std::filesystem::weakly_canonical(base, ec);
+    if (ec) return false;
+    auto canonCandidate = std::filesystem::weakly_canonical(candidate, ec);
+    if (ec) return false;
+
+    auto baseIt = canonBase.begin();
+    auto candIt = canonCandidate.begin();
+    for (; baseIt != canonBase.end(); ++baseIt, ++candIt) {
+        if (candIt == canonCandidate.end() || *candIt != *baseIt) return false;
+    }
+    return true;
+}
+
 void processDirectory(const nlohmann::json& rules, const Options& opts) {
     if (!std::filesystem::exists(opts.targetDir) || !std::filesystem::is_directory(opts.targetDir)) {
         std::cerr << color::red << "Error: Invalid directory " << opts.targetDir.string() << color::reset << std::endl;
         return;
     }
 
+    // Collect the full file list BEFORE moving anything. Moving files while a 
+    // std::filesystem::recursive_directory_iterator is actively walking the same tree is undefined behavior
+    std::vector<std::filesystem::path> files;
     if (opts.recursive) {
-        auto options = std::filesystem::directory_options::skip_permission_denied;
-        for (const auto& entry : std::filesystem::recursive_directory_iterator(opts.targetDir, options)) {
-            if (entry.is_regular_file()) {
-                handleFile(entry, rules, opts);
-            }
+        auto dirOpts = std::filesystem::directory_options::skip_permission_denied;
+        for (const auto& entry : std::filesystem::recursive_directory_iterator(opts.targetDir, dirOpts)) {
+            if (entry.is_regular_file()) files.push_back(entry.path());
         }
     } else {
         for (const auto& entry : std::filesystem::directory_iterator(opts.targetDir)) {
-            if (entry.is_regular_file()) {
-                handleFile(entry, rules, opts);
-            }
+            if (entry.is_regular_file()) files.push_back(entry.path());
         }
+    }
+
+    for (const auto& filePath : files) {
+        if (!std::filesystem::exists(filePath)) continue;
+        handleFile(std::filesystem::directory_entry(filePath), rules, opts);
     }
 }
 }
