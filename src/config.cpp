@@ -14,14 +14,49 @@ std::filesystem::path getDefaultConfigPath() {
 }
 
 json loadConfig(const std::filesystem::path& path) {
+    if (!std::filesystem::exists(path)) {
+        std::cout << "Config file not found. Creating standart config in: " << path << std::endl;
+
+        if (path.has_parent_path()) {
+            std::filesystem::create_directories(path.parent_path());
+        }
+
+        const char* home = std::getenv("HOME");
+        std::string homeStr = home ? home : "";
+
+        json defaultConfig = {
+            {".pdf", homeStr + "/Documents/PDFs"},
+            {".png", homeStr + "/Pictures"},
+            {".jpg", homeStr + "/Pictures"},
+            {".zip", homeStr + "/Downloads/Archives"}
+        };
+
+        std::ofstream outFile(path);
+        if (outFile.is_open()) {
+            outFile << defaultConfig.dump(4) << std::endl;
+            outFile.close();
+        } else {
+            std::cerr << "\033[31mError: Couldn't create config file in: " << path <<  "\033[0m" << std::endl;
+            return nullptr;
+        }
+
+        return defaultConfig;
+    }
+
     std::ifstream file(path);
     if (!file.is_open()) {
-        std::cerr << "Error: couldn't open config file in " << path << std::endl;
+        std::cerr << "\033[31mError: Couldn't open config file in: " << path << "\033[0m" << std::endl;
         return nullptr;
     }
 
     json data;
-    file >> data;
+    try {
+        file >> data;
+    } catch (const json::parse_error& e) {
+        std::cerr << "\033[31mError parsing JSON config: " << e.what() << "\033[0m" <<std::endl;
+        return nullptr;
+    }
+
     return data;
 }
 
