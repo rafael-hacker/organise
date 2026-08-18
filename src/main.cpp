@@ -1,24 +1,34 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <cstdlib> // For std::getenv
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 
 int main(int argc, char *argv[]){
     if (argc < 2){
-        std::cout << "usage: ./org <path>" << std::endl;
+        std::cout << "usage: org <path>" << std::endl;
         return 1;
     }
     
-    std::ifstream config("config/config.json");
+    // Pega o diretório home do usuário atual
+    const char* homeDir = std::getenv("HOME");
+    if (!homeDir) {
+        std::cerr << "Erro: Variável de ambiente HOME não está definida." << std::endl;
+        return 1;
+    }
+
+    std::filesystem::path configPath = std::filesystem::path(homeDir) / ".config" / "organise" / "config.json";
+    
+    std::ifstream config(configPath);
     if (!config.is_open()){
-        std::cerr << "Failed to read config.json "<< std::endl;
+        std::cerr << "Failed to read config.json em " << configPath << std::endl;
+        std::cerr << "Certifique-se de criar o arquivo antes de rodar o programa." << std::endl;
         return 1;
     }
 
     json data;
-
     config >> data; 
     
     for (auto& entry : std::filesystem::directory_iterator(argv[1])){
@@ -32,10 +42,15 @@ int main(int argc, char *argv[]){
             if (it != data.end()){
                 std::filesystem::path path = it.value().get<std::filesystem::path>();
                 
+                if (!std::filesystem::exists(path)) {
+                    std::filesystem::create_directories(path);
+                }
+
                 std::filesystem::path dest = path / filename;
                 std::filesystem::rename(source, dest);
             }
        }
     }
-
+    
+    return 0;
 }
