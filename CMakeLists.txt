@@ -8,15 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # ------------------------------------------------------------------------------
 # - Dependencies (nlohmann/json via FetchContent)
 # ------------------------------------------------------------------------------
-include(FetchContent)
 
-FetchContent_Declare(
-    json
-    GIT_REPOSITORY https://github.com/nlohmann/json.git
-    GIT_TAG        v3.11.3
-)
-FetchContent_MakeAvailable(json)
-
+find_package(nlohmann_json 3.2.0 REQUIRED)
 # ------------------------------------------------------------------------------
 # Executable
 # ------------------------------------------------------------------------------
