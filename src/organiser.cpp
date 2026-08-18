@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cctype>
 #include <algorithm> // Needed for std::transform
+#include <regex>
 
 using namespace organise;
 namespace organise {
