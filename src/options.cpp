@@ -36,7 +36,7 @@ Options parseArgs(int argc, char* argv[]) {
             opts.recursive = true;
         } else if (arg == "-u" || arg == "--undo") {
             opts.undo = true;
-        } else if (arg == "--watch") {
+        } else if (arg == "--watch" || arg == "-w") {
             opts.watch = true;
             continue;
         } else if (arg == "-v" || arg == "--verbose") {
