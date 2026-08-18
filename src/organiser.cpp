@@ -90,11 +90,13 @@ static void handleFile(const std::filesystem::directory_entry& entry, const nloh
         try {
             std::filesystem::rename(entry.path(), destPath);
             std::cout << color::yellow << "Moved: " << filename.string() << " -> " << destPath.string() << color::reset << std::endl;
+            history::logMove(entry.path(), destPath);
         } catch (const std::filesystem::filesystem_error& e) {
             if (e.code() == std::errc::cross_device_link) {
                 std::filesystem::copy(entry.path(), destPath, std::filesystem::copy_options::overwrite_existing);
                 std::filesystem::remove(entry.path());
                 std::cout << color::yellow << "Moved (Cross-device): " << filename.string() << " -> " << destPath.string() << color::reset << std::endl;
+                history::logMove(entry.path(), destPath);
             } else {
                 std::cerr << color::red << "Error moving " << filename.string() << ": " << e.what() << color::reset << std::endl;
             }
