@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/rafael/Projects/organise/build/cmake_install.cmake",
+		"/home/rafael/Projects/organise/build/_deps/nlohmann_json-build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
