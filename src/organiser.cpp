@@ -1,4 +1,5 @@
 #include "../include/organiser.hpp"
+#include "../include/history.hpp"
 #include "../include/colors.hpp"
 #include <iostream>
 #include <cctype>
