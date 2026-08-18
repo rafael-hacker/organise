@@ -1,6 +1,7 @@
 #include "../include/config.hpp"
 #include "../include/options.hpp"
 #include "../include/organiser.hpp"
+#include "../include/history.hpp"
 #include "../include/colors.hpp"
 #include <iostream>
 
@@ -22,6 +23,11 @@ int main(int argc, char* argv[]) {
         std::cerr << color::red << "Error: Target directory is needed." << color::reset << std::endl;
         organise::printHelp();
         return 1;
+    }
+
+    if (opts.undo) {
+        organise::history::undo();
+        return 0;
     }
 
     auto rules = organise::loadConfig(opts.configPath);
