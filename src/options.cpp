@@ -6,16 +6,18 @@
 namespace organise {
 
 void printHelp() {
-    std::cout << "\033[31m"<< "Usage: org [OPTIONS] <path>\n\n" << ""
-              << "\033[35m"<<"Options:\n"
-              << "\033[30m"<<"  -n, --dry-run          Simulate actions without moving files\n" << "\033[0m"
-              << "\033[30m"<<"  -r, --recursive        Scan directories recursively\n" << "\033[0m"
-              << "\033[30m"<<"  -v, --verbose          Display detailed execution output\n" << "\033[0m"
-              << "\033[30m"<<"  -y, --auto-rename      Automatically rename conflicting files (no prompt)\n" << "\033[0m"
-              << "\033[30m"<<"      --conflict <mode>  Set conflict strategy: rename, skip, or overwrite\n" << "\033[0m"
-              << "\033[30m"<<"  -c, --config <path>    Custom configuration file path\n" << "\033[0m"
-              << "\033[32m"<<"  -h, --help             Display this help message\n " << "\033[0m"
-              << "\033[34m" <<"      --version          Display version information\n" << "\033[0m";
+    std::cout << "Usage: org [OPTIONS] <path>\n\n"
+              << "Options:\n"
+              << "  -n, --dry-run          Simulate actions without moving files\n"
+              << "  -r, --recursive        Scan directories recursively\n"
+              << "  -v, --verbose          Display detailed execution output\n"
+              << "  -y, --auto-rename      Automatically rename conflicting files (no prompt)\n"
+              << "      --conflict <mode>  Set conflict strategy: rename, skip, or overwrite\n"
+              << "  -c, --config <path>    Custom configuration file path\n"
+              << "  -w, --watch            Watch directory continuously and organise new files as they appear\n"
+              << "  -u, --undo             Undo the last batch of moves\n"
+              << "  -h, --help             Display this help message\n"
+              << "      --version          Display version information\n";
 }
 
 Options parseArgs(int argc, char* argv[]) {
@@ -32,6 +34,11 @@ Options parseArgs(int argc, char* argv[]) {
             opts.dryRun = true;
         } else if (arg == "-r" || arg == "--recursive") {
             opts.recursive = true;
+        } else if (arg == "-u" || arg == "--undo") {
+            opts.undo = true;
+        } else if (arg == "--watch" || arg == "-w") {
+            opts.watch = true;
+            continue;
         } else if (arg == "-v" || arg == "--verbose") {
             opts.verbose = true;
         } else if (arg == "-y" || arg == "--auto-rename") {

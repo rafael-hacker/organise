@@ -1,8 +1,11 @@
 #include "../include/config.hpp"
 #include "../include/options.hpp"
 #include "../include/organiser.hpp"
+#include "../include/history.hpp"
+#include "../include/colors.hpp"
 #include <iostream>
 
+using namespace organise;
 int main(int argc, char* argv[]) {
     auto opts = organise::parseArgs(argc, argv);
 
@@ -12,21 +15,29 @@ int main(int argc, char* argv[]) {
     }
 
     if (opts.showVersion) {
-        std::cout << "\033[34m" << "org version 1.0.0\n" << "\033[0m" ;
+        std::cout << color::blue << "org version 1.0.0" << color::reset << std::endl;
         return 0;
     }
 
     if (opts.targetDir.empty()) {
-        std::cerr << "\033[31m" << "Error: Target directory is needed.\n\n" << "\033[0m";
+        std::cerr << color::red << "Error: Target directory is needed." << color::reset << std::endl;
         organise::printHelp();
         return 1;
+    }
+
+    if (opts.undo) {
+        organise::history::undo();
+        return 0;
     }
 
     auto rules = organise::loadConfig(opts.configPath);
     if (rules.is_null()) {
         return 1;
     }
-
-    organise::processDirectory(rules, opts);
+    if (opts.watch) {
+        startWatcher(rules, opts);
+    } else {
+        processDirectory(rules, opts);
+    }
     return 0;
 }

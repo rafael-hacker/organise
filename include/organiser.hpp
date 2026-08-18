@@ -7,5 +7,7 @@
 namespace organise {
 
 void processDirectory(const nlohmann::json& rules, const Options& opts);
+void startWatcher(const nlohmann::json& rules, const Options& opts);
+void handleFile(const std::filesystem::directory_entry& entry, const nlohmann::json& rules, const Options& opts);
 
 } // namespace organise
