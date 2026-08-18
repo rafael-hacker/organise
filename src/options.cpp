@@ -1,23 +1,24 @@
 #include "../include/options.hpp"
 #include "../include/config.hpp"
 #include <iostream>
+#include "../include/colors.hpp"
 #include <string_view>
 
 namespace organise {
 
 void printHelp() {
-    std::cout << "Usage: org [OPTIONS] <path>\n\n"
-              << "Options:\n"
-              << "  -n, --dry-run          Simulate actions without moving files\n"
-              << "  -r, --recursive        Scan directories recursively\n"
-              << "  -v, --verbose          Display detailed execution output\n"
-              << "  -y, --auto-rename      Automatically rename conflicting files (no prompt)\n"
-              << "      --conflict <mode>  Set conflict strategy: rename, skip, or overwrite\n"
-              << "  -c, --config <path>    Custom configuration file path\n"
-              << "  -w, --watch            Watch directory continuously and organise new files as they appear\n"
-              << "  -u, --undo             Undo the last batch of moves\n"
-              << "  -h, --help             Display this help message\n"
-              << "      --version          Display version information\n";
+    std::cout << color::red    <<"Usage: org [OPTIONS] <path>\n\n" << color::reset
+              << color::purple << "Options:\n" << color::reset
+              << color::green  <<"  -n, --dry-run          Simulate actions without moving files\n" << color::reset
+              << color::green  <<"  -r, --recursive        Scan directories recursively\n" << color::reset
+              << color::green  <<"  -v, --verbose          Display detailed execution output\n" << color::reset
+              << color::green  <<"  -y, --auto-rename      Automatically rename conflicting files (no prompt)\n" << color::reset
+              << color::green  <<"      --conflict <mode>  Set conflict strategy: rename, skip, or overwrite\n" << color::reset
+              << color::green  <<"  -c, --config <path>    Custom configuration file path\n" << color::reset
+              << color::green  <<"  -w, --watch            Watch directory continuously and organise new files as they appear\n" << color::reset
+              << color::green  <<"  -u, --undo             Undo the last batch of moves\n" << color::reset
+              << color::cyan   <<"  -h, --help             Display this help message\n" << color::reset
+              << color::blue   <<"      --version          Display version information\n" << color::reset;
 }
 
 Options parseArgs(int argc, char* argv[]) {
