@@ -34,7 +34,10 @@ int main(int argc, char* argv[]) {
     if (rules.is_null()) {
         return 1;
     }
-
-    organise::processDirectory(rules, opts);
+    if (opts.watch) {
+        startWatcher(rules, opts);
+    } else {
+        processDirectory(rules, opts);
+    }
     return 0;
 }
