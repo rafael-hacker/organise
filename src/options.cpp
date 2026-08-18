@@ -1,24 +1,23 @@
 #include "../include/options.hpp"
 #include "../include/config.hpp"
 #include <iostream>
-#include "../include/colors.hpp"
 #include <string_view>
 
 namespace organise {
 
 void printHelp() {
-    std::cout << color::red    <<"Usage: org [OPTIONS] <path>\n\n" << color::reset
-              << color::purple << "Options:\n" << color::reset
-              << color::green  <<"  -n, --dry-run          Simulate actions without moving files\n" << color::reset
-              << color::green  <<"  -r, --recursive        Scan directories recursively\n" << color::reset
-              << color::green  <<"  -v, --verbose          Display detailed execution output\n" << color::reset
-              << color::green  <<"  -y, --auto-rename      Automatically rename conflicting files (no prompt)\n" << color::reset
-              << color::green  <<"      --conflict <mode>  Set conflict strategy: rename, skip, or overwrite\n" << color::reset
-              << color::green  <<"  -c, --config <path>    Custom configuration file path\n" << color::reset
-              << color::green  <<"  -w, --watch            Watch directory continuously and organise new files as they appear\n" << color::reset
-              << color::green  <<"  -u, --undo             Undo the last batch of moves\n" << color::reset
-              << color::cyan   <<"  -h, --help             Display this help message\n" << color::reset
-              << color::blue   <<"      --version          Display version information\n" << color::reset;
+    std::cout << "Usage: org [OPTIONS] <path>\n\n"
+              << "Options:\n"
+              << "  -n, --dry-run          Simulate actions without moving files\n"
+              << "  -r, --recursive        Scan directories recursively\n"
+              << "  -v, --verbose          Display detailed execution output\n"
+              << "  -y, --auto-rename      Automatically rename conflicting files (no prompt)\n"
+              << "      --conflict <mode>  Set conflict strategy: rename, skip, or overwrite\n"
+              << "  -c, --config <path>    Custom configuration file path\n"
+              << "      --watch            Watch directory continuously and organise new files as they appear\n"
+              << "  -u, --undo             Undo the last batch of moves\n"
+              << "  -h, --help             Display this help message\n"
+              << "      --version          Display version information\n";
 }
 
 Options parseArgs(int argc, char* argv[]) {
@@ -26,38 +25,48 @@ Options parseArgs(int argc, char* argv[]) {
 
     for (int i = 1; i < argc; ++i) {
         std::string_view arg = argv[i];
-        
-        std::string arg_lower{arg};
-        std::transform(arg_lower.begin(), arg_lower.end(), arg_lower.begin(), [](unsigned char c){
-            return std::tolower(c);
-        });
 
-        if (arg_lower == "-h" || arg_lower == "--help") {
+        if (arg.empty()) {
+            continue;
+        }
+
+        if (arg == "-h" || arg == "--help") {
             opts.showHelp = true;
-        } else if (arg_lower == "--version") {
+        } else if (arg == "--version") {
             opts.showVersion = true;
-        } else if (arg_lower == "-n" || arg_lower == "--dry-run") {
+        } else if (arg == "-n" || arg == "--dry-run") {
             opts.dryRun = true;
-        } else if (arg_lower == "-r" || arg_lower == "--recursive") {
+        } else if (arg == "-r" || arg == "--recursive") {
             opts.recursive = true;
-        } else if (arg_lower == "-u" || arg_lower == "--undo") {
+        } else if (arg == "-u" || arg == "--undo") {
             opts.undo = true;
-        } else if (arg_lower == "--watch" || arg_lower == "-w") {
+        } else if (arg == "--watch") {
             opts.watch = true;
             continue;
-        } else if (arg_lower == "-v" || arg_lower == "--verbose") {
+        } else if (arg == "-v" || arg == "--verbose") {
             opts.verbose = true;
-        } else if (arg_lower == "-y" || arg_lower == "--auto-rename") {
+        } else if (arg == "-y" || arg == "--auto-rename") {
             opts.conflictMode = ConflictMode::Rename;
-        } else if (arg == "--conflict" && i + 1 < argc) {
+        } else if (arg == "--conflict") {
+            if (i + 1 >= argc) {
+                std::cerr << "Error: --conflict requires an argument (rename, skip, or overwrite).\n";
+                continue;
+            }
             std::string_view mode = argv[++i];
             if (mode == "skip") opts.conflictMode = ConflictMode::Skip;
             else if (mode == "overwrite") opts.conflictMode = ConflictMode::Overwrite;
-            else opts.conflictMode = ConflictMode::Rename;
-        } else if ((arg_lower == "-c" || arg_lower == "--config") && i + 1 < argc) {
+            else if (mode == "rename") opts.conflictMode = ConflictMode::Rename;
+            else std::cerr << "Warning: unrecognized --conflict mode '" << mode << "', ignoring.\n";
+        } else if (arg == "-c" || arg == "--config") {
+            if (i + 1 >= argc) {
+                std::cerr << color::red << "Error: " << arg << " requires a path argument." << color::reset << std::endl;
+                continue;
+            }
             opts.configPath = argv[++i];
         } else if (arg[0] != '-') {
             opts.targetDir = arg;
+        } else {
+            std::cerr << color::yellow << "Warning: unrecognized option '" << arg << "', ignoring. Run with --help to see valid options." << color::reset << std::endl;
         }
     }
 
