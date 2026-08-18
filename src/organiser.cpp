@@ -81,8 +81,18 @@ static void handleFile(const std::filesystem::directory_entry& entry, const nloh
     if (opts.dryRun) {
         std::cout << "[DRY-RUN] Would move: " << filename << " -> " << destPath << "\n";
     } else {
-        std::filesystem::rename(entry.path(), destPath);
-        std::cout << "Moved: " << filename << " -> " << destPath << "\n";
+        try {
+            std::filesystem::rename(entry.path(), destPath);
+            std::cout << "Moved: " << filename << " -> " << destPath << "\n";
+        } catch (const std::filesystem::filesystem_error& e) {
+            if (e.code() == std::errc::cross_device_link) {
+                std::filesystem::copy(entry.path(), destPath, std::filesystem::copy_options::overwrite_existing);
+                std::filesystem::remove(entry.path());
+                std::cout << "Moved (Cross-device): " << filename << " -> " << destPath << "\n";
+            } else {
+                std::cerr << "\033[31mError moving " << filename << ": " << e.what() << "\033[0m\n";
+            }
+        }
     }
 }
 
