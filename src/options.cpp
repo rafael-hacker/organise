@@ -6,16 +6,16 @@
 namespace organise {
 
 void printHelp() {
-    std::cout << "Usage: org [OPTIONS] <path>\n\n"
-              << "Options:\n"
-              << "  -n, --dry-run          Simulate actions without moving files\n"
-              << "  -r, --recursive        Scan directories recursively\n"
-              << "  -v, --verbose          Display detailed execution output\n"
-              << "  -y, --auto-rename      Automatically rename conflicting files (no prompt)\n"
-              << "      --conflict <mode>  Set conflict strategy: rename, skip, or overwrite\n"
-              << "  -c, --config <path>    Custom configuration file path\n"
-              << "  -h, --help             Display this help message\n"
-              << "      --version          Display version information\n";
+    std::cout << "\033[31m"<< "Usage: org [OPTIONS] <path>\n\n" << ""
+              << "\033[35m"<<"Options:\n"
+              << "\033[30m"<<"  -n, --dry-run          Simulate actions without moving files\n" << "\033[0m"
+              << "\033[30m"<<"  -r, --recursive        Scan directories recursively\n" << "\033[0m"
+              << "\033[30m"<<"  -v, --verbose          Display detailed execution output\n" << "\033[0m"
+              << "\033[30m"<<"  -y, --auto-rename      Automatically rename conflicting files (no prompt)\n" << "\033[0m"
+              << "\033[30m"<<"      --conflict <mode>  Set conflict strategy: rename, skip, or overwrite\n" << "\033[0m"
+              << "\033[30m"<<"  -c, --config <path>    Custom configuration file path\n" << "\033[0m"
+              << "\033[32m"<<"  -h, --help             Display this help message\n " << "\033[0m"
+              << "\033[34m" <<"      --version          Display version information\n" << "\033[0m";
 }
 
 Options parseArgs(int argc, char* argv[]) {

@@ -16,7 +16,7 @@ std::filesystem::path getDefaultConfigPath() {
 json loadConfig(const std::filesystem::path& path) {
     std::ifstream file(path);
     if (!file.is_open()) {
-        std::cerr << "Error: couldn't open config file in " << path << std::endl;
+        std::cerr << "\033[31m" << "Error: couldn't open config file in " << path << "\033[0m" << std::endl;
         return nullptr;
     }
 
