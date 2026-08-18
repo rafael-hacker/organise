@@ -15,7 +15,7 @@ int main(int argc, char *argv[]){
 
     const char* homeDir = std::getenv("HOME");
     if (!homeDir) {
-        std::cerr << "Erro: Variável de ambiente HOME não está definida." << std::endl;
+        std::cerr << "Error: Environment variable HOME is not defined." << std::endl;
         return 1;
     }
 
@@ -23,8 +23,8 @@ int main(int argc, char *argv[]){
     
     std::ifstream config(configPath);
     if (!config.is_open()){
-        std::cerr << "Failed to read config.json em " << configPath << std::endl;
-        std::cerr << "Certifique-se de criar o arquivo antes de rodar o programa." << std::endl;
+        std::cerr << "Failed to read config.json. " << configPath << std::endl;
+        std::cerr << "Make sure to create the file before running the program." << std::endl;
         return 1;
     }
 
