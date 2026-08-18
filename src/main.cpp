@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
         return 1;
     }
     
-    // Pega o diretório home do usuário atual
+
     const char* homeDir = std::getenv("HOME");
     if (!homeDir) {
         std::cerr << "Erro: Variável de ambiente HOME não está definida." << std::endl;
