@@ -55,8 +55,21 @@ Note: The target directory will be created automatically if it does not already 
 # 🚀 Usage
 Once installed, you can run `org` from any directory in your terminal:
 ``` Bash
-org /path/to/target/folder
+org [FLAGS] /path/to/target/folder
 ```
+# ✨ Key Features
+
+| Command | Description |
+| :--- | :--- |
+| **`org -n/--dry-run`** | Simulate actions without actually doing them |
+| **`org -r/--recursive`** | Scan directories recursively |
+| **`org -v/--verbose`** | Display detailed execution output |
+| **`org -y/--auto-rename`** | Automatically  rename conflicting files (no prompt) |
+| **`org --conflict <mode>`** | Set conflict strategy: rename, skip or overwrite |
+| **`org -c/--config <path>`** | Use a custom config file |
+| **`org --version`** | Display the project's version |
+| **`org -h/--help`** | Display a help message |
+
 # Uninstalled Run
 If you built the project without installing it globally, you can run the binary directly from the build folder:
 ```
