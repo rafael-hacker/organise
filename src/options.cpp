@@ -64,6 +64,7 @@ Options parseArgs(int argc, char* argv[]) {
         }
         
         switch (opt){
+            case 'p': opts.targetDir = optarg; break;
             case 'h': opts.showHelp = true; break;
             case 'n': opts.dryRun = true; break;
             case 'r': opts.recursive = true; break;
