@@ -24,10 +24,10 @@ static std::filesystem::path getUniquePath(const std::filesystem::path& destPath
 
 static ConflictMode promptUserConflict(const std::filesystem::path& filename) {
     while (true) {
-        std::cout << "The file '" << filename.string() << "' Already exists.\n"
+        std::cout << color::yellow << "The file '" << filename.string() << "' Already exists.\n" << color::reset << color::blue
                   << "  [r]ename (as " << filename.stem().string() << " (1)" << filename.extension().string() << ")\n"
                   << "  [s]kip\n"
-                  << "  [o]verwrite\n"
+                  << "  [o]verwrite\n" << color::reset
                   << "Choose [r/s/o]: ";
 
         char choice;
@@ -38,7 +38,7 @@ static ConflictMode promptUserConflict(const std::filesystem::path& filename) {
         if (choice == 's') return ConflictMode::Skip;
         if (choice == 'o') return ConflictMode::Overwrite;
 
-        std::cout << "Invalid option! Try again.\n\n";
+        std::cout << color::red << "Invalid option! Try again.\n\n" << color::reset;
     }
 }
 
@@ -49,7 +49,7 @@ static void handleFile(const std::filesystem::directory_entry& entry, const nloh
     auto it = rules.find(ext);
     if (it == rules.end()) {
         if (opts.verbose) {
-            std::cout << "[VERBOSE] No rule for the extension: " << ext << " (" << filename << ")\n";
+            std::cout << color::blue << "[VERBOSE] No rule for the extension: " << ext << " (" << filename << ")\n" << color::reset;
         }
         return;
     }
@@ -64,7 +64,7 @@ static void handleFile(const std::filesystem::directory_entry& entry, const nloh
 
     if (std::filesystem::exists(destPath)) {
         if (opts.dryRun) {
-            std::cout << "[DRY-RUN] Conflict detected for: " << filename << "\n";
+            std::cout << color::yellow << "[DRY-RUN] Conflict detected for: " << filename << color::reset << std::endl;
             return;
         }
 
@@ -74,7 +74,7 @@ static void handleFile(const std::filesystem::directory_entry& entry, const nloh
         }
 
         if (action == ConflictMode::Skip) {
-            std::cout << "Skipped: " << filename << "\n";
+            std::cout << color::yellow << "Skipped: " << filename << color::reset << std::endl;
             return;
         } else if (action == ConflictMode::Rename) {
             destPath = getUniquePath(destPath);
@@ -82,18 +82,18 @@ static void handleFile(const std::filesystem::directory_entry& entry, const nloh
     }
 
     if (opts.dryRun) {
-        std::cout << "[DRY-RUN] Would move: " << filename << " -> " << destPath << "\n";
+        std::cout << color::yellow << "[DRY-RUN] Would move: " << filename << " -> " << destPath << color::reset << std::endl;
     } else {
         try {
             std::filesystem::rename(entry.path(), destPath);
-            std::cout << "Moved: " << filename << " -> " << destPath << "\n";
+            std::cout << color::yellow << "Moved: " << filename << " -> " << destPath << color::reset << std::endl;
         } catch (const std::filesystem::filesystem_error& e) {
             if (e.code() == std::errc::cross_device_link) {
                 std::filesystem::copy(entry.path(), destPath, std::filesystem::copy_options::overwrite_existing);
                 std::filesystem::remove(entry.path());
-                std::cout << "Moved (Cross-device): " << filename << " -> " << destPath << "\n";
+                std::cout << color::yellow << "Moved (Cross-device): " << filename << " -> " << destPath << color::reset << std::endl;
             } else {
-                std::cerr << "\033[31mError moving " << filename << ": " << e.what() << "\033[0m\n";
+                std::cerr << color::red << "Error moving " << filename << ": " << e.what() << color::reset << std::endl;
             }
         }
     }
@@ -101,7 +101,7 @@ static void handleFile(const std::filesystem::directory_entry& entry, const nloh
 
 void processDirectory(const nlohmann::json& rules, const Options& opts) {
     if (!std::filesystem::exists(opts.targetDir) || !std::filesystem::is_directory(opts.targetDir)) {
-        std::cerr << "Error: Invalid directory " << opts.targetDir << std::endl;
+        std::cerr << color::red << "Error: Invalid directory " << opts.targetDir << color::reset << std::endl;
         return;
     }
 
