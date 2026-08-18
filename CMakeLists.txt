@@ -17,6 +17,7 @@ find_package(nlohmann_json 3.2.0 REQUIRED)
 set(SOURCES
     src/main.cpp
     src/config.cpp
+    src/options.cpp
     src/organiser.cpp
 )
 
