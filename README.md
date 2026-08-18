@@ -1,48 +1,64 @@
 # organise 🗂️
 
-**organise** is a C++ tool designed to help you organize your file paths efficiently. The project is currently under active development and will be improved in the future!
+**organise** is a C++ command-line tool designed to automatically sort and move files into designated directories based on their extensions.
 
 ---
 
 ## 📂 Project Structure
 
-The repository directory tree is organized as follows:
 ```text
-.
-├── Makefile
-├── README.md
-├── bin
-│   ├── config
-│   │   └── config.json
-│   └── org
-└── src
-    └── main.cpp
+organise/
+├── CMakeLists.txt
+├── include/
+│   ├── config.hpp
+│   └── organiser.hpp
+├── src/
+│   ├── config.cpp
+│   ├── organiser.cpp
+│   └── main.cpp
+└── README.md
 ```
 
 📦 Dependencies
-To compile and run this project, you need the nlohmann/json modern JSON library for C++.
+The project uses **CMake** (v3.14+) and automatically fetches the nlohmann/json library during the build step.
 
-If you are using Arch Linux, you can easily install it via the official repositories using your package manager:
+**Requirements**
+- A C++17 compliant compile (`g++` or `clang++`)
+- `cmake` (version 3.14 or higher)
+- `git` (to fetch dependencies)
+
+### Build instructions
 
 ``` Bash
-sudo pacman -S nlohmann-json
+cmake -B build
+cmake --build build
+sudo cmake --install build
 ```
-
 
 ## ⚙️ How to Configure
-To set up the tool, you need to edit the config.json file located inside the bin/config/ directory.
+The tool reads its configuration from the user's home directory at  `~/.config/organise/config.json`.
 
-The mapping associates file extensions with your desired destination directories. For example:
-
+1. Create the configuration directory:
+```
+mkdir -p $HOME/.config/organise
+```
+2. Create and edit the `config.json` file:
 ``` JSON
 {
-  ".txt": "/home/your_username/Documents"
+  ".pdf": "/home/your_username/Documents/PDFs",
+  ".jpg": "/home/your_username/Pictures",
+  ".png": "/home/your_username/Pictures"
 }
 ```
-Note: Make sure to replace the path with the actual directory on your machine where you want your files to be sorted!
+Note: The target directory will be created automatically if it does not already exist.
 
-🛠️ How to Build
-The project uses a Makefile to simplify the build process. To compile the C++ source code and generate the executable in the correct folder, navigate to the project root and run the standard build command with make.
-
-🚀 Project Status
-Under active development! Stay tuned for upcoming features and improvements.
+# 🚀 Usage
+Once installed, you can run `org` from any directory in your terminal:
+``` Bash
+org /path/to/target/folder
+```
+# Uninstalled Run
+If you built the project without installing it globally, you can run the binary directly from the build folder:
+```
+./build/org /path/to/target/folder
+```
