@@ -7,7 +7,10 @@ namespace organise {
 static std::filesystem::path getUniquePath(const std::filesystem::path& destPath) {
     auto parent = destPath.parent_path();
     auto stem = destPath.stem().string();
-    auto ext = destPath.extension().string();
+    std::string ext = entry.path().extension().string();
+    std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c){ return std::tolower(c); });
+    
+    auto it = rules.find(ext);
 
     int counter = 1;
     std::filesystem::path uniquePath;
@@ -61,7 +64,7 @@ static void handleFile(const std::filesystem::directory_entry& entry, const nloh
 
     if (std::filesystem::exists(destPath)) {
         if (opts.dryRun) {
-            std::cout << "[DRY-RUN] Conflit detected for: " << filename << "\n";
+            std::cout << "[DRY-RUN] Conflict detected for: " << filename << "\n";
             return;
         }
 
@@ -103,7 +106,8 @@ void processDirectory(const nlohmann::json& rules, const Options& opts) {
     }
 
     if (opts.recursive) {
-        for (const auto& entry : std::filesystem::recursive_directory_iterator(opts.targetDir)) {
+        auto options = std::filesystem::directory_options::skip_permission_denied;
+        for (const auto& entry : std::filesystem::recursive_directory_iterator(opts.targetDir, options)) {
             if (entry.is_regular_file()) {
                 handleFile(entry, rules, opts);
             }
