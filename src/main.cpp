@@ -1,6 +1,7 @@
 #include "../include/config.hpp"
 #include "../include/options.hpp"
 #include "../include/organiser.hpp"
+#include "../include/colors.hpp"
 #include <iostream>
 
 int main(int argc, char* argv[]) {
@@ -12,12 +13,12 @@ int main(int argc, char* argv[]) {
     }
 
     if (opts.showVersion) {
-        std::cout << "org version 1.0.0\n";
+        std::cout << color::blue << "org version 1.0.0" << color::reset << std::endl;
         return 0;
     }
 
     if (opts.targetDir.empty()) {
-        std::cerr << "Error: Target directory is needed.\n\n";
+        std::cerr << color:red << "Error: Target directory is needed." << color::reset << std::endl;
         organise::printHelp();
         return 1;
     }
