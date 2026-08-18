@@ -67,6 +67,8 @@ org [FLAGS] /path/to/target/folder
 | **`org -y/--auto-rename`** | Automatically  rename conflicting files (no prompt) |
 | **`org --conflict <mode>`** | Set conflict strategy: rename, skip or overwrite |
 | **`org -c/--config <path>`** | Use a custom config file |
+| **`org --watch`** | Watch the directory continuously and organise new files as they're created or moved in |
+| **`org -u/--undo`** | Undo the last batch of moves, using the history log |
 | **`org --version`** | Display the project's version |
 | **`org -h/--help`** | Display a help message |
 
