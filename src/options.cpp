@@ -25,30 +25,35 @@ Options parseArgs(int argc, char* argv[]) {
 
     for (int i = 1; i < argc; ++i) {
         std::string_view arg = argv[i];
+        
+        std::string arg_lower{arg};
+        std::transform(arg_lower.begin(), arg_lower.end(), arg_lower.begin(), [](unsigned char c){
+            return std::tolower(c);
+        });
 
-        if (arg == "-h" || arg == "--help") {
+        if (arg_lower == "-h" || arg_lower == "--help") {
             opts.showHelp = true;
-        } else if (arg == "--version") {
+        } else if (arg_lower == "--version") {
             opts.showVersion = true;
-        } else if (arg == "-n" || arg == "--dry-run") {
+        } else if (arg_lower == "-n" || arg_lower == "--dry-run") {
             opts.dryRun = true;
-        } else if (arg == "-r" || arg == "--recursive") {
+        } else if (arg_lower == "-r" || arg_lower == "--recursive") {
             opts.recursive = true;
-        } else if (arg == "-u" || arg == "--undo") {
+        } else if (arg_lower == "-u" || arg_lower == "--undo") {
             opts.undo = true;
-        } else if (arg == "--watch" || arg == "-w") {
+        } else if (arg_lower == "--watch" || arg_lower == "-w") {
             opts.watch = true;
             continue;
-        } else if (arg == "-v" || arg == "--verbose") {
+        } else if (arg_lower == "-v" || arg_lower == "--verbose") {
             opts.verbose = true;
-        } else if (arg == "-y" || arg == "--auto-rename") {
+        } else if (arg_lower == "-y" || arg_lower == "--auto-rename") {
             opts.conflictMode = ConflictMode::Rename;
         } else if (arg == "--conflict" && i + 1 < argc) {
             std::string_view mode = argv[++i];
             if (mode == "skip") opts.conflictMode = ConflictMode::Skip;
             else if (mode == "overwrite") opts.conflictMode = ConflictMode::Overwrite;
             else opts.conflictMode = ConflictMode::Rename;
-        } else if ((arg == "-c" || arg == "--config") && i + 1 < argc) {
+        } else if ((arg_lower == "-c" || arg_lower == "--config") && i + 1 < argc) {
             opts.configPath = argv[++i];
         } else if (arg[0] != '-') {
             opts.targetDir = arg;
