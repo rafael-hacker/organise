@@ -1,27 +1,32 @@
 #include "../include/config.hpp"
+#include "../include/options.hpp"
 #include "../include/organiser.hpp"
 #include <iostream>
 
 int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        std::cout << "Usage: org <path>" << std::endl;
+    auto opts = organise::parseArgs(argc, argv);
+
+    if (opts.showHelp) {
+        organise::printHelp();
+        return 0;
+    }
+
+    if (opts.showVersion) {
+        std::cout << "org version 1.0.0\n";
+        return 0;
+    }
+
+    if (opts.targetDir.empty()) {
+        std::cerr << "Error: Target directory path is required.\n\n";
+        organise::printHelp();
         return 1;
     }
 
-    std::filesystem::path targetDir = argv[1];
-    std::filesystem::path configPath = organise::getDefaultConfigPath();
-
-    if (configPath.empty()) {
-        std::cerr << "Error: HOME Variable not found." << std::endl;
-        return 1;
-    }
-
-    auto rules = organise::loadConfig(configPath);
+    auto rules = organise::loadConfig(opts.configPath);
     if (rules.is_null()) {
         return 1;
     }
 
-    organise::processDirectory(targetDir, rules);
-
+    organise::processDirectory(opts.targetDir, rules, opts.dryRun);
     return 0;
 }
