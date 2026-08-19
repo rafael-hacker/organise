@@ -27,7 +27,7 @@ Options parseArgs(int argc, char* argv[]) {
     int opt_index = 0;
     optind = 1;
     opterr = 0;
-    while((opt = getopt_long(argc , argv, "n:r:vycp:uh", long_option,&opt_index)) != -1){
+    while((opt = getopt_long(argc , argv, "nrvyc:p:uh", long_option,&opt_index)) != -1){
         if (opt == 0){
             std::string arg = long_option[opt_index].name;
              if (arg == "help") {
