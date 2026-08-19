@@ -9,14 +9,33 @@
 ```text
 organise/
 ├── CMakeLists.txt
-├── include/
-│   ├── config.hpp
-│   └── organiser.hpp
-├── src/
-│   ├── config.cpp
-│   ├── organiser.cpp
-│   └── main.cpp
-└── README.md
+├── LICENSE
+├── README.md
+├── completions
+│   ├── org.bash
+│   ├── org.fish
+│   └── org.zsh
+├── docs
+├── include
+│   └── organise
+│       ├── colors.hpp
+│       ├── config.hpp
+│       ├── history.hpp
+│       ├── options.hpp
+│       ├── organiser.hpp
+│       └── version.hpp.in
+├── man
+│   └── org.1
+├── packaging
+│   └── PKGBUILD
+├── src
+│   ├── config.cpp
+│   ├── history.cpp
+│   ├── main.cpp
+│   ├── options.cpp
+│   ├── organiser.cpp
+│   └── watcher.cpp
+└── tests
 ```
 
 📦 Dependencies
