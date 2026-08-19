@@ -40,14 +40,14 @@ Options parseArgs(int argc, char* argv[]) {
                 opts.recursive = true;
             } else if (arg == "undo") {
                 opts.undo = true;
-            } else if ("watch") {
+            } else if (arg == "watch") {
                 opts.watch = true;
                 continue;
             } else if (arg == "verbose") {
                 opts.verbose = true;
             } else if (arg == "auto-rename") {
                 opts.conflictMode = ConflictMode::Rename;
-            } else if ("conflict") {
+            } else if (arg == "conflict") {
                 std::string_view mode = optarg;             
                 
                 if (mode == "skip") opts.conflictMode = ConflictMode::Skip;

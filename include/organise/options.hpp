@@ -8,8 +8,8 @@
 namespace organise {
 
 inline const struct option long_option[] = {
-    {"dry-run", required_argument, nullptr, 'n'},
-    {"recursive", required_argument, nullptr, 'r'},
+    {"dry-run", no_argument, nullptr, 'n'},
+    {"recursive", no_argument, nullptr, 'r'},
     {"verbose", no_argument, nullptr, 'v'},
     {"path", required_argument, nullptr, 'p'},
     {"conflict", required_argument ,nullptr, 0},
