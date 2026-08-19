@@ -15,7 +15,7 @@ inline const struct option long_option[] = {
     {"conflict", required_argument ,nullptr, 0},
     {"config", required_argument, nullptr, 'c'},
     {"auto-rename", no_argument, nullptr, 'y'},
-    {"watch", no_argument, nullptr, 0},
+    {"watch", no_argument, nullptr, 'w'},
     {"undo", no_argument, nullptr, 'u'},
     {"help", no_argument, nullptr, 'h'},
     {"version", no_argument, nullptr, 0},

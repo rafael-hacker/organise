@@ -1,4 +1,5 @@
 #include "organise/history.hpp"
+#include "organise/log.hpp"
 #include "organise/colors.hpp"
 #include <nlohmann/json.hpp>
 #include <filesystem>
@@ -71,8 +72,10 @@ void undo() {
                 std::filesystem::create_directories(orig.parent_path());
                 std::filesystem::rename(dest, orig);
                 std::cout << color::green << "Undone: " << dest.filename().string() << " -> " << orig.string() << color::reset << "\n";
+		log::logActivity("Undid move: " + dest.filename().string() + " → " + orig.string());
             } catch (const std::exception& e) {
                 std::cerr << color::red << "Error undoing " << dest.filename().string() << ": " << e.what() << color::reset << "\n";
+		log::logActivity("ERROR undoing " + dest.filename().string() + ": " + e.what());
             }
         }
     }

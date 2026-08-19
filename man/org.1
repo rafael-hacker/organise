@@ -6,14 +6,22 @@ org \- Automatically sort and move files into designated directories
 [\fIOPTIONS\fR] [\fIDIRECTORY\fR]
 .SH DESCRIPTION
 .B org
-is a fast, C++ based command-line tool that automatically organizes files in a directory based on predefined rules. It supports regex matching, extension grouping, and continuous watching using inotify.
+is a fast, C++ based command-line tool that automatically organizes files in a directory based on predefined rules. It supports regex matching, extension grouping, continuous watching (recursively) using inotify, and activity logging.
+.P
+Configuration is read from
+.I ~/.config/organise/config.json
+(see
+.BR \-\-config ).
+All file moves are logged with timestamps to
+.I ~/.local/state/organise/activity.log
+, which is especially useful in watch mode.
 .SH OPTIONS
 .TP
 .BR \-n ", " \-\-dry\-run
-Simulate actions without actually doing them.
+Simulate actions without actually moving files.
 .TP
 .BR \-r ", " \-\-recursive
-Scan directories recursively.
+Scan directories recursively (process all subdirectories).
 .TP
 .BR \-v ", " \-\-verbose
 Display detailed execution output.
@@ -25,10 +33,10 @@ Automatically rename conflicting files without prompting the user.
 Set conflict strategy. Valid modes are: \fIrename\fR, \fIskip\fR, or \fIoverwrite\fR.
 .TP
 .BR \-w ", " \-\-watch
-Watch the directory continuously and organise new files as they are created or moved in.
+Watch the directory and all subdirectories continuously, organising new files as they appear (recursively).
 .TP
 .BR \-c ", " \-\-config=\fIFILE\fR
-Use a specific configuration file instead of the default paths.
+Use a specific configuration file instead of the default path.
 .TP
 .BR \-u ", " \-\-undo
 Undo the last batch of moves, using the history log.
@@ -38,3 +46,35 @@ Display a help message and exit.
 .TP
 .BR \-V ", " \-\-version
 Display the project's version and exit.
+.SH FILES
+.I ~/.config/organise/config.json
+.RS
+Default configuration file (JSON format). If it does not exist, it is automatically created with example rules.
+.RE
+.I ~/.local/state/organise/history.json
+.RS
+History of moves used for undo operations.
+.RE
+.I ~/.local/state/organise/activity.log
+.RS
+Activity log with timestamps for all moves and errors.
+.RE
+.SH EXAMPLES
+Organize files in the current directory with verbose output:
+.RS
+.B org -v .
+.RE
+Simulate what would happen in a recursive scan:
+.RS
+.B org -n -r ~/Downloads
+.RE
+Watch a directory continuously:
+.RS
+.B org --watch ~/Downloads
+.RE
+Undo the last operation:
+.RS
+.B org -u
+.RE
+.SH BUGS
+Report issues at https://github.com/rafael-hacker/organise/issues

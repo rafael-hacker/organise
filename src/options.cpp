@@ -27,7 +27,7 @@ Options parseArgs(int argc, char* argv[]) {
     int opt_index = 0;
     optind = 1;
     opterr = 0;
-    while((opt = getopt_long(argc , argv, "nrvyc:p:uh", long_option,&opt_index)) != -1){
+    while((opt = getopt_long(argc , argv, "nwrvyc:p:uh", long_option,&opt_index)) != -1){
         if (opt == 0){
             std::string arg = long_option[opt_index].name;
              if (arg == "help") {
@@ -64,6 +64,7 @@ Options parseArgs(int argc, char* argv[]) {
         }
         
         switch (opt){
+	    case 'w': opts.watch = true; break;
             case 'p': opts.targetDir = optarg; break;
             case 'h': opts.showHelp = true; break;
             case 'n': opts.dryRun = true; break;

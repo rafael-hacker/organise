@@ -1,5 +1,6 @@
 #include "organise/organiser.hpp"
 #include "organise/history.hpp"
+#include "organise/log.hpp"
 #include "organise/colors.hpp"
 #include <iostream>
 #include <cctype>
@@ -131,14 +132,17 @@ void handleFile(const std::filesystem::directory_entry& entry, const nlohmann::j
             std::filesystem::rename(entry.path(), destPath);
             std::cout << color::yellow << "Moved: " << filename << " -> " << destPath.string() << color::reset << std::endl;
             history::logMove(entry.path(), destPath);
+	    log::logActivity("Moved " + filename + "-> " + destPath.string());
         } catch (const std::filesystem::filesystem_error& e) {
             if (e.code() == std::errc::cross_device_link) {
                 std::filesystem::copy(entry.path(), destPath, std::filesystem::copy_options::overwrite_existing);
                 std::filesystem::remove(entry.path());
                 std::cout << color::yellow << "Moved (Cross-device): " << filename << " -> " << destPath.string() << color::reset << std::endl;
                 history::logMove(entry.path(), destPath);
+		log::logActivity("Moved (cross-device) " + filename + " → " + destPath.string());
             } else {
                 std::cerr << color::red << "Error moving " << filename << ": " << e.what() << color::reset << std::endl;
+		log::logActivity("ERROR moving " + filename + ": " + e.what());
             }
         }
     }

@@ -1,4 +1,5 @@
 #include "organise/config.hpp"
+#include "organise/log.hpp"
 #include "organise/colors.hpp"
 #include <cstdlib>
 #include <fstream>
@@ -41,6 +42,7 @@ json loadConfig(const std::filesystem::path& path) {
         if (outFile.is_open()) {
             outFile << defaultConfig.dump(4) << std::endl;
             outFile.close();
+	    log::logActivity("Created default config at " + path.string());
         } else {
             std::cerr << color::red << "Error: Couldn't create config file in: " << path <<  color::reset << std::endl;
             return nullptr;

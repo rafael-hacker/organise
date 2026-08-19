@@ -3,12 +3,17 @@
 #include "organise/organiser.hpp"
 #include "organise/history.hpp"
 #include "organise/colors.hpp"
+#include "organise/log.hpp"
 #include "organise/version.hpp"
 #include <iostream>
 
 using namespace organise;
 int main(int argc, char* argv[]) {
     auto opts = organise::parseArgs(argc, argv);
+
+    if (!opts.showHelp && !opts.showVersion && !opts.targetDir.empty() && !opts.undo && !opts.dryRun) {
+        organise::log::logActivity("Run started on " + opts.targetDir.string());
+    }
 
     if (opts.showHelp) {
         organise::printHelp();

@@ -48,14 +48,14 @@ jobs:
 
       - name: Bump PKGBUILD version
         run: |
-          sed -i "s/^pkgver=.*/pkgver=${{ needs.build-and-release.outputs.version }}/" packaging/PKGBUILD
-          sed -i "s/^pkgrel=.*/pkgrel=1/" packaging/PKGBUILD
+          sed -i "s/^pkgver=.*/pkgver=${{ needs.build-and-release.outputs.version }}/" packaging/stable/PKGBUILD
+          sed -i "s/^pkgrel=.*/pkgrel=1/" packaging/stable/PKGBUILD
 
       - name: Publish to AUR
         uses: KSXGitHub/github-actions-deploy-aur@v4.1.1
         with:
           pkgname: organise
-          pkgbuild: ./packaging/PKGBUILD
+          pkgbuild: ./packaging/stable/PKGBUILD
           updpkgsums: true
           test: true
           commit_username: ${{ secrets.AUR_USERNAME }}

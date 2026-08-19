@@ -1,1 +1,11 @@
-build
+build/
+*.o
+*.a
+*.so
+*.tar.gz
+*.tar.xz
+*.zip
+.DS_Store
+*.swp
+*.swo
+*~

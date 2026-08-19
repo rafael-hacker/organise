@@ -11,31 +11,29 @@ organise/
 ├── CMakeLists.txt
 ├── LICENSE
 ├── README.md
-├── completions
-│   ├── org.bash
-│   ├── org.fish
-│   └── org.zsh
-├── docs
-├── include
-│   └── organise
-│       ├── colors.hpp
-│       ├── config.hpp
-│       ├── history.hpp
-│       ├── options.hpp
-│       ├── organiser.hpp
-│       └── version.hpp.in
-├── man
-│   └── org.1
-├── packaging
-│   └── PKGBUILD
-├── src
-│   ├── config.cpp
-│   ├── history.cpp
-│   ├── main.cpp
-│   ├── options.cpp
-│   ├── organiser.cpp
-│   └── watcher.cpp
-└── tests
+├── completions/
+├── docs/                 # User guides
+├── include/organise/
+│   ├── colors.hpp
+│   ├── config.hpp
+│   ├── history.hpp
+│   ├── log.hpp           # Activity logging
+│   ├── options.hpp
+│   ├── organiser.hpp
+│   └── version.hpp.in
+├── man/
+├── packaging/
+│   ├── stable/           # PKGBUILD for tagged releases
+│   └── git/              # PKGBUILD for git version
+├── src/
+│   ├── config.cpp
+│   ├── history.cpp
+│   ├── log.cpp           # Logging implementation
+│   ├── main.cpp
+│   ├── options.cpp
+│   ├── organiser.cpp
+│   └── watcher.cpp
+└── tests/
 ```
 
 ---
@@ -85,6 +83,13 @@ mkdir -p $HOME/.config/organise
 ```
 Note: The target directory will be created automatically if it does not already exist.
 
+## 📝 Activity Log
+
+All file moves (and errors) are logged with timestamps to:
+`~/.local/state/organise/activity.log`
+
+This helps you review what the tool did, especially when running in watch mode.
+
 # 🚀 Usage
 Once installed, you can run `org` from any directory in your terminal:
 ``` Bash
@@ -100,7 +105,7 @@ org [FLAGS] /path/to/target/folder
 | **`org -y/--auto-rename`** | Automatically  rename conflicting files (no prompt) |
 | **`org --conflict <mode>`** | Set conflict strategy: rename, skip or overwrite |
 | **`org -c/--config <path>`** | Use a custom config file |
-| **`org --watch`** | Watch the directory continuously and organise new files as they're created or moved in |
+| **`org -w/--watch`** | Watch the directory **recursively** continuously and organise new files as they're created or moved in |
 | **`org -u/--undo`** | Undo the last batch of moves, using the history log |
 | **`org --version`** | Display the project's version |
 | **`org -h/--help`** | Display a help message |
