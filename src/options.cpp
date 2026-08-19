@@ -89,6 +89,9 @@ Options parseArgs(int argc, char* argv[]) {
         }
     }
 
+    if (optind < argc) {
+        opts.targetDir = argv[optind];
+    }
     if (opts.configPath.empty()) {
         opts.configPath = getDefaultConfigPath();
     }
