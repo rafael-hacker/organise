@@ -38,7 +38,10 @@ organise/
 └── tests
 ```
 
-📦 Dependencies
+---
+
+## 📦 Dependencies
+
 The project uses **CMake** (v3.14+) and automatically fetches the nlohmann/json library during the build step.
 
 **Requirements**
