@@ -3,22 +3,36 @@
 #include "organise/colors.hpp"
 #include <iostream>
 #include <string_view>
+#include <ftxui/dom/elements.hpp>
+#include <ftxui/screen/screen.hpp>
 
 namespace organise {
 
 void printHelp() {
-    std::cout << color::red    <<"Usage: org [OPTIONS] <path>\n\n" << color::reset
-              << color::purple << "Options:\n" << color::reset
-              << color::green  <<"  -n, --dry-run          Simulate actions without moving files\n" << color::reset
-              << color::green  <<"  -r, --recursive        Scan directories recursively\n" << color::reset
-              << color::green  <<"  -v, --verbose          Display detailed execution output\n" << color::reset
-              << color::green  <<"  -y, --auto-rename      Automatically rename conflicting files (no prompt)\n" << color::reset
-              << color::green  <<"      --conflict <mode>  Set conflict strategy: rename, skip, or overwrite\n" << color::reset
-              << color::green  <<"  -c, --config <path>    Custom configuration file path\n" << color::reset
-              << color::green  <<"  -w, --watch            Watch directory continuously and organise new files as they appear\n" << color::reset
-              << color::green  <<"  -u, --undo             Undo the last batch of moves\n" << color::reset
-              << color::cyan   <<"  -h, --help             Display this help message\n" << color::reset
-              << color::blue   <<"      --version          Display version information\n" << color::reset;
+    using namespace ftxui;
+    Element document = vbox({
+        separator(),
+        text("Usage: org [OPTIONS] <path>\n\n") | color(Color::Red),
+        text("Options:\n") | color(Color::Purple),
+        text("  -n, --dry-run          Simulate actions without moving files\n") | color(Color::Green),
+        text("  -r, --recursive        Scan directories recursively\n") | color(Color::Green),
+        text("  -v, --verbose          Display detailed execution output\n") | color(Color::Green),
+        text("  -y, --auto-rename      Automatically rename conflicting files (no prompt)\n" ) | color(Color::Green),
+        text("      --conflict <mode>  Set conflict strategy: rename, skip, or overwrite\n") | color(Color::Green),
+        text("  -c, --config <path>    Custom configuration file path\n" ) | color(Color::Green),
+        text("  -w, --watch            Watch directory continuously and organise new files as they appear\n" ) | color(Color::Green),
+        text("  -u, --undo             Undo the last batch of moves\n") | color(Color::Green),
+        text("  -h, --help             Display this help message\n" ) | color(Color::Cyan),
+        text("      --version          Display version information\n" ) | color(Color::Blue)
+}) | border | flex;
+    auto screen = Screen::Create(
+    Dimension::Full(),       // Width
+    Dimension::Fit(document) // Height
+    );
+    Render(screen, document);
+ 
+    // Print the screen to the console.
+    screen.Print();
 }
 
 Options parseArgs(int argc, char* argv[]) {
@@ -53,7 +67,7 @@ Options parseArgs(int argc, char* argv[]) {
                 if (mode == "skip") opts.conflictMode = ConflictMode::Skip;
                 else if (mode == "overwrite") opts.conflictMode = ConflictMode::Overwrite;
                 else if (mode == "rename") opts.conflictMode = ConflictMode::Rename;
-                else std::cerr << color::yellow << "Warning: unrecognized --conflict mode '" << mode << "', ignoring." << color::reset << std::endl;
+                else std::cerr << xcolor::yellow << "Warning: unrecognized --conflict mode '" << mode << "', ignoring." << xcolor::reset << std::endl;
             
             } else if (arg == "config") {
                 opts.configPath = optarg;
@@ -75,12 +89,12 @@ Options parseArgs(int argc, char* argv[]) {
             
             case '?': {
                 if (optopt == 'c'){
-                     std::cerr << color::red << "Error: -c requires a path argument." << color::reset << std::endl;
+                     std::cerr << xcolor::red << "Error: -c requires a path argument." << xcolor::reset << std::endl;
                 } else if ((std::string_view(argv[optind - 1]).find("--conflict") != std::string_view::npos)) {
-                    std::cerr << color::red << "Error: --conflict requires an argument (rename, skip, or overwrite)." << color::reset << std::endl;
+                    std::cerr << xcolor::red << "Error: --conflict requires an argument (rename, skip, or overwrite)." << xcolor::reset << std::endl;
                 } else {
-                     std::cerr << color::yellow << "Warning: unrecognized option '" << argv[optind - 1] 
-                              << "', ignoring. Run with --help to see valid options." << color::reset << std::endl;
+                     std::cerr << xcolor::yellow << "Warning: unrecognized option '" << argv[optind - 1] 
+                              << "', ignoring. Run with --help to see valid options." << xcolor::reset << std::endl;
                 }
                 break;
             }

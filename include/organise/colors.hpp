@@ -2,7 +2,7 @@
 #pragma once
 #include <string_view>
 
-namespace organise::color {
+namespace organise::xcolor {
     // ANSI color codes
     constexpr std::string_view purple = "\033[35m";
     constexpr std::string_view reset  = "\033[0m";
