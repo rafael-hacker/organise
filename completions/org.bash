@@ -3,7 +3,7 @@ _org_completions() {
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="-n --dry-run -w --watch -c --config -u --undo -h --help -v --version"
+    opts="-n --dry-run -r --recursive -v --verbose -y --auto-rename --conflict -w --watch -c --config -u --undo -h --help --version"
 
     if [[ ${cur} == -* ]] ; then
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
