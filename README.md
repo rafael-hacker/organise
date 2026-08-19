@@ -11,29 +11,39 @@ organise/
 ├── CMakeLists.txt
 ├── LICENSE
 ├── README.md
-├── completions/
-├── docs/                 # User guides
-├── include/organise/
-│   ├── colors.hpp
-│   ├── config.hpp
-│   ├── history.hpp
-│   ├── log.hpp           # Activity logging
-│   ├── options.hpp
-│   ├── organiser.hpp
-│   └── version.hpp.in
-├── man/
-├── packaging/
-│   ├── stable/           # PKGBUILD for tagged releases
-│   └── git/              # PKGBUILD for git version
-├── src/
-│   ├── config.cpp
-│   ├── history.cpp
-│   ├── log.cpp           # Logging implementation
-│   ├── main.cpp
-│   ├── options.cpp
-│   ├── organiser.cpp
-│   └── watcher.cpp
-└── tests/
+├── completions
+│   ├── org.bash
+│   ├── org.fish
+│   └── org.zsh
+├── docs
+│   ├── CHANGELOG.md
+│   ├── CONTRIBUTING.md
+│   └── user-guide.md
+├── include
+│   └── organise
+│       ├── colors.hpp
+│       ├── config.hpp
+│       ├── history.hpp
+│       ├── log.hpp
+│       ├── options.hpp
+│       ├── organiser.hpp
+│       └── version.hpp.in
+├── man
+│   └── org.1
+├── packaging
+│   ├── organise-git
+│   │   └── PKGBUILD
+│   └── stable
+│       └── PKGBUILD
+├── src
+│   ├── config.cpp
+│   ├── history.cpp
+│   ├── log.cpp
+│   ├── main.cpp
+│   ├── options.cpp
+│   ├── organiser.cpp
+│   └── watcher.cpp
+└── tests
 ```
 
 ---
