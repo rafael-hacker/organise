@@ -59,6 +59,6 @@ install(DIRECTORY include/organise
 )
 
 install(FILES man/org.1 DESTINATION share/man/man1)
-install(FILES completion/org.bash DESTINATION share/bash-completion/completions RENAME org)
+install(FILES completions/org.bash DESTINATION share/bash-completion/completions RENAME org)
 install(FILES completions/org.zsh DESTINATION share/zsh/site-functions RENAME _org)
 install(FILES completions/org.fish DESTINATION share/fish/vendor_completions.d)
