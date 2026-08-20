@@ -57,8 +57,12 @@ configure_file(
 set(SOURCES
     src/main.cpp
     src/config.cpp
+<<<<<<< Updated upstream
     src/options.cpp
+=======
+>>>>>>> Stashed changes
     src/organiser.cpp
+    src/options.cpp
     src/history.cpp
     src/watcher.cpp
 )
