@@ -57,7 +57,7 @@ configure_file(
 set(SOURCES
     src/main.cpp
     src/config.cpp
-    src/options.cpp
+    src/options2.cpp
     src/organiser.cpp
     src/history.cpp
     src/watcher.cpp

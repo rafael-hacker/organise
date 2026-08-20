@@ -5,8 +5,12 @@
 #include "organise/colors.hpp"
 #include "organise/version.hpp"
 #include <iostream>
+#include <ftxui/dom/elements.hpp>  // for operator|, text, Element, Fit, borderDouble, borderHeavy, borderLight, borderRounded, vbox
+#include <ftxui/screen/screen.hpp>  // for Screen
 
+using namespace ftxui;
 using namespace organise;
+
 int main(int argc, char* argv[]) {
     auto opts = organise::parseArgs(argc, argv);
 
@@ -16,12 +20,21 @@ int main(int argc, char* argv[]) {
     }
 
     if (opts.showVersion) {
-        std::cout << color::blue << "org version " << ORGANISE_VERSION << color::reset << std::endl;
+        Element document = hbox({
+            text("󰏖 Organiser Version ") | color(Color::Cyan),
+            text(ORGANISE_VERSION) | color(Color::Yellow)
+        }) | borderStyled(ROUNDED, Color::GrayLight);
+        auto screen = Screen::Create(
+            Dimension::Fit(document)
+        );
+        Render(screen, document);
+        screen.Print();
+        std::cout << std::endl;
         return 0;
     }
 
     if (opts.targetDir.empty()) {
-        std::cerr << color::red << "Error: Target directory is needed." << color::reset << std::endl;
+        std::cerr << xcolor::red << "Error: Target directory is needed." << xcolor::reset << std::endl;
         organise::printHelp();
         return 1;
     }

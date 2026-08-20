@@ -21,7 +21,7 @@ std::filesystem::path getDefaultConfigPath() {
 
 json loadConfig(const std::filesystem::path& path) {
     if (!std::filesystem::exists(path)) {
-        std::cout << color::yellow << "Config file not found. Creating standard config in: " << path << color::reset << std::endl;
+        std::cout << xcolor::yellow << "Config file not found. Creating standard config in: " << path << xcolor::reset << std::endl;
 
         if (path.has_parent_path()) {
             std::filesystem::create_directories(path.parent_path());
@@ -42,7 +42,7 @@ json loadConfig(const std::filesystem::path& path) {
             outFile << defaultConfig.dump(4) << std::endl;
             outFile.close();
         } else {
-            std::cerr << color::red << "Error: Couldn't create config file in: " << path <<  color::reset << std::endl;
+            std::cerr << xcolor::red << "Error: Couldn't create config file in: " << path <<  xcolor::reset << std::endl;
             return nullptr;
         }
 
@@ -51,7 +51,7 @@ json loadConfig(const std::filesystem::path& path) {
 
     std::ifstream file(path);
     if (!file.is_open()) {
-        std::cerr << color::red << "Error: Couldn't open config file in: " << path << color::reset << std::endl;
+        std::cerr << xcolor::red << "Error: Couldn't open config file in: " << path << xcolor::reset << std::endl;
         return nullptr;
     }
 
@@ -59,7 +59,7 @@ json loadConfig(const std::filesystem::path& path) {
     try {
         file >> data;
     } catch (const json::parse_error& e) {
-        std::cerr << color::red << "Error parsing JSON config: " << e.what() << color::reset << std::endl;
+        std::cerr << xcolor::red << "Error parsing JSON config: " << e.what() << xcolor::reset << std::endl;
         return nullptr;
     }
 

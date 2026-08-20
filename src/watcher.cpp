@@ -10,19 +10,19 @@ namespace organise {
 void startWatcher(const nlohmann::json& rules, const Options& opts) {
     int fd = inotify_init();
     if (fd < 0) {
-        std::cerr << color::red << "Error initializing inotify." << color::reset << std::endl;
+        std::cerr << xcolor::red << "Error initializing inotify." << xcolor::reset << std::endl;
         return;
     }
 
     int wd = inotify_add_watch(fd, opts.targetDir.c_str(), IN_CLOSE_WRITE | IN_MOVED_TO);
     if (wd < 0) {
-        std::cerr << color::red << "Error while monitoring directory: " << opts.targetDir.string() << color::reset << std::endl;
+        std::cerr << xcolor::red << "Error while monitoring directory: " << opts.targetDir.string() << xcolor::reset << std::endl;
         close(fd);
         return;
     }
 
-    std::cout << color::blue << "Watcher active! Monitoring directory: " << opts.targetDir.string() << color::reset << std::endl;
-    std::cout << color::yellow << "Press Ctrl+C to exit." << color::reset << std::endl;
+    std::cout << xcolor::blue << "Watcher active! Monitoring directory: " << opts.targetDir.string() << xcolor::reset << std::endl;
+    std::cout << xcolor::yellow << "Press Ctrl+C to exit." << xcolor::reset << std::endl;
 
     char buffer[4096] __attribute__((aligned(__alignof__(struct inotify_event))));
     

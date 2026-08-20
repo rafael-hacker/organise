@@ -46,7 +46,7 @@ void logMove(const std::filesystem::path& original, const std::filesystem::path&
 void undo() {
     auto path = getHistoryPath();
     if (!std::filesystem::exists(path)) {
-        std::cout << color::yellow << "No history found, nothing to undo.\n" << color::reset;
+        std::cout << xcolor::yellow << "No history found, nothing to undo.\n" << xcolor::reset;
         return;
     }
 
@@ -56,11 +56,11 @@ void undo() {
     inFile.close();
 
     if (j.empty()) {
-        std::cout << color::yellow << "The history is empty.\n" << color::reset;
+        std::cout << xcolor::yellow << "The history is empty.\n" << xcolor::reset;
         return;
     }
 
-    std::cout << color::blue << "Reversing " << j.size() << " changes...\n" << color::reset;
+    std::cout << xcolor::blue << "Reversing " << j.size() << " changes...\n" << xcolor::reset;
 
     for (auto it = j.rbegin(); it != j.rend(); ++it) {
         std::filesystem::path orig = (*it)["original"];
@@ -70,15 +70,15 @@ void undo() {
             try {
                 std::filesystem::create_directories(orig.parent_path());
                 std::filesystem::rename(dest, orig);
-                std::cout << color::green << "Undone: " << dest.filename().string() << " -> " << orig.string() << color::reset << "\n";
+                std::cout << xcolor::green << "Undone: " << dest.filename().string() << " -> " << orig.string() << xcolor::reset << "\n";
             } catch (const std::exception& e) {
-                std::cerr << color::red << "Error undoing " << dest.filename().string() << ": " << e.what() << color::reset << "\n";
+                std::cerr << xcolor::red << "Error undoing " << dest.filename().string() << ": " << e.what() << xcolor::reset << "\n";
             }
         }
     }
     
     std::filesystem::remove(path);
-    std::cout << color::blue << "Clean history.\n" << color::reset;
+    std::cout << xcolor::blue << "Clean history.\n" << xcolor::reset;
 }
 
 } // namespace organise::history

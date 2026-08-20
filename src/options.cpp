@@ -11,28 +11,30 @@ namespace organise {
 void printHelp() {
     using namespace ftxui;
     Element document = vbox({
+        text("󰉏  Organiser ") | color(Color::Red),
         separator(),
-        text("Usage: org [OPTIONS] <path>\n\n") | color(Color::Red),
-        text("Options:\n") | color(Color::Purple),
-        text("  -n, --dry-run          Simulate actions without moving files\n") | color(Color::Green),
-        text("  -r, --recursive        Scan directories recursively\n") | color(Color::Green),
-        text("  -v, --verbose          Display detailed execution output\n") | color(Color::Green),
-        text("  -y, --auto-rename      Automatically rename conflicting files (no prompt)\n" ) | color(Color::Green),
-        text("      --conflict <mode>  Set conflict strategy: rename, skip, or overwrite\n") | color(Color::Green),
-        text("  -c, --config <path>    Custom configuration file path\n" ) | color(Color::Green),
-        text("  -w, --watch            Watch directory continuously and organise new files as they appear\n" ) | color(Color::Green),
-        text("  -u, --undo             Undo the last batch of moves\n") | color(Color::Green),
-        text("  -h, --help             Display this help message\n" ) | color(Color::Cyan),
-        text("      --version          Display version information\n" ) | color(Color::Blue)
-}) | border | flex;
+        text(" 󰘳 Usage: 󰆍 org <command/flags> [path]\n\n") | color(Color::Red),
+        text(" 󰞷 Options:\n") | color(Color::Purple),
+        text(" 󰓛  -n, --dry-run          Simulate actions without moving files\n") | color(Color::Green),
+        text(" 󰡁 -r, --recursive        Scan directories recursively\n") | color(Color::Green),
+        text(" 󰐊  -v, --verbose          Display detailed execution output\n") | color(Color::Green),
+        text(" 󰑕  -y, --auto-rename      Automatically rename conflicting files (no prompt)\n" ) | color(Color::Green),
+        text(" 󰅚    --conflict <mode>  Set conflict strategy: rename, skip, or overwrite\n") | color(Color::Green),
+        text(" 󰅩 -c, --config <path>    Custom configuration file path\n" ) | color(Color::Green),
+        text(" 󰕏 -w, --watch            Watch directory continuously and organise new files as they appear\n" ) | color(Color::Green),
+        text(" 󰕌 u, --undo             Undo the last batch of moves\n") | color(Color::Green),
+        text(" 󰞷 -h, --help             Display this help message\n" ) | color(Color::Cyan),
+        text(" 󰏖    --version          Display version information\n" ) | color(Color::Blue)
+}) | borderStyled(ROUNDED, Color::GrayLight);
+    
     auto screen = Screen::Create(
-    Dimension::Full(),       // Width
     Dimension::Fit(document) // Height
     );
     Render(screen, document);
  
     // Print the screen to the console.
     screen.Print();
+    std::cout<<std::endl;
 }
 
 Options parseArgs(int argc, char* argv[]) {

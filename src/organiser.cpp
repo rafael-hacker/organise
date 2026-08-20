@@ -29,10 +29,10 @@ static bool isSubPath(const std::filesystem::path& base, const std::filesystem::
 
 static ConflictMode promptUserConflict(const std::filesystem::path& filename) {
     while (true) {
-        std::cout << color::yellow << "The file '" << filename.string() << "' Already exists.\n" << color::reset << color::blue
+        std::cout << xcolor::yellow << "The file '" << filename.string() << "' Already exists.\n" << xcolor::reset << xcolor::blue
                   << "  [r]ename (as " << filename.stem().string() << " (1)" << filename.extension().string() << ")\n"
                   << "  [s]kip\n"
-                  << "  [o]verwrite\n" << color::reset
+                  << "  [o]verwrite\n" << xcolor::reset
                   << "Choose [r/s/o]: ";
 
 	std::string input;
@@ -45,7 +45,7 @@ static ConflictMode promptUserConflict(const std::filesystem::path& filename) {
         if (choice == 's') return ConflictMode::Skip;
         if (choice == 'o') return ConflictMode::Overwrite;
 
-        std::cout << color::red << "Invalid option! Try again.\n\n" << color::reset;
+        std::cout << xcolor::red << "Invalid option! Try again.\n\n" << xcolor::reset;
     }
 }
 
@@ -81,21 +81,21 @@ void handleFile(const std::filesystem::directory_entry& entry, const nlohmann::j
 
     if (!found) {
         if (opts.verbose) {
-            std::cout << color::cyan << "[VERBOSE] No matching rule for '" << filename << "', leaving in place." << color::reset << std::endl;
+            std::cout << xcolor::cyan << "[VERBOSE] No matching rule for '" << filename << "', leaving in place." << xcolor::reset << std::endl;
         }
         return;
     }
 
     if (opts.verbose) {
-        std::cout << color::cyan << "[VERBOSE] '" << filename << "' matched rule '" << matchedPattern
-                   << "' -> " << destDir.string() << color::reset << std::endl;
+        std::cout << xcolor::cyan << "[VERBOSE] '" << filename << "' matched rule '" << matchedPattern
+                   << "' -> " << destDir.string() << xcolor::reset << std::endl;
     }
 
     if (opts.recursive && isSubPath(opts.targetDir, destDir)) {
-        std::cerr << color::red << "Skipped " << filename
+        std::cerr << xcolor::red << "Skipped " << filename
                    << ": destination '" << destDir.string()
                    << "' is inside the recursively-scanned directory, which could cause repeated re-organising."
-                   << color::reset << std::endl;
+                   << xcolor::reset << std::endl;
         return;
     }
 
@@ -107,7 +107,7 @@ void handleFile(const std::filesystem::directory_entry& entry, const nlohmann::j
     
     if (std::filesystem::exists(destPath)) {
         if (opts.dryRun) {
-            std::cout << color::yellow << "[DRY-RUN] Conflict detected for: " << filename << color::reset << std::endl;
+            std::cout << xcolor::yellow << "[DRY-RUN] Conflict detected for: " << filename << xcolor::reset << std::endl;
             return;
         }
 
@@ -117,7 +117,7 @@ void handleFile(const std::filesystem::directory_entry& entry, const nlohmann::j
         }
 
         if (action == ConflictMode::Skip) {
-            std::cout << color::yellow << "Skipped: " << filename << color::reset << std::endl;
+            std::cout << xcolor::yellow << "Skipped: " << filename << xcolor::reset << std::endl;
             return;
         } else if (action == ConflictMode::Rename) {
             destPath = getUniquePath(destPath);
@@ -125,20 +125,20 @@ void handleFile(const std::filesystem::directory_entry& entry, const nlohmann::j
     }
 
     if (opts.dryRun) {
-        std::cout << color::yellow << "[DRY-RUN] Would move: " << filename << " -> " << destPath.string() << color::reset << std::endl;
+        std::cout << xcolor::yellow << "[DRY-RUN] Would move: " << filename << " -> " << destPath.string() << xcolor::reset << std::endl;
     } else {
         try {
             std::filesystem::rename(entry.path(), destPath);
-            std::cout << color::yellow << "Moved: " << filename << " -> " << destPath.string() << color::reset << std::endl;
+            std::cout << xcolor::yellow << "Moved: " << filename << " -> " << destPath.string() << xcolor::reset << std::endl;
             history::logMove(entry.path(), destPath);
         } catch (const std::filesystem::filesystem_error& e) {
             if (e.code() == std::errc::cross_device_link) {
                 std::filesystem::copy(entry.path(), destPath, std::filesystem::copy_options::overwrite_existing);
                 std::filesystem::remove(entry.path());
-                std::cout << color::yellow << "Moved (Cross-device): " << filename << " -> " << destPath.string() << color::reset << std::endl;
+                std::cout << xcolor::yellow << "Moved (Cross-device): " << filename << " -> " << destPath.string() << xcolor::reset << std::endl;
                 history::logMove(entry.path(), destPath);
             } else {
-                std::cerr << color::red << "Error moving " << filename << ": " << e.what() << color::reset << std::endl;
+                std::cerr << xcolor::red << "Error moving " << filename << ": " << e.what() << xcolor::reset << std::endl;
             }
         }
     }
@@ -165,7 +165,7 @@ static bool isSubPath(const std::filesystem::path& base, const std::filesystem::
 
 void processDirectory(const nlohmann::json& rules, const Options& opts) {
     if (!std::filesystem::exists(opts.targetDir) || !std::filesystem::is_directory(opts.targetDir)) {
-        std::cerr << color::red << "Error: Invalid directory " << opts.targetDir.string() << color::reset << std::endl;
+        std::cerr << xcolor::red << "Error: Invalid directory " << opts.targetDir.string() << xcolor::reset << std::endl;
         return;
     }
 
@@ -184,9 +184,9 @@ void processDirectory(const nlohmann::json& rules, const Options& opts) {
     }
 
     if (opts.verbose) {
-        std::cout << color::cyan << "[VERBOSE] Scanning " << opts.targetDir.string()
+        std::cout << xcolor::cyan << "[VERBOSE] Scanning " << opts.targetDir.string()
                    << (opts.recursive ? " (recursive)" : "") << " -- found " << files.size()
-                   << " file(s) to check." << color::reset << std::endl;
+                   << " file(s) to check." << xcolor::reset << std::endl;
     }
 
     for (const auto& filePath : files) {
