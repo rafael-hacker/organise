@@ -22,7 +22,7 @@ void printHelp() {
         text(" 󰅚    --conflict <mode>  Set conflict strategy: rename, skip, or overwrite\n") | color(Color::Green),
         text(" 󰅩 -c, --config <path>    Custom configuration file path\n" ) | color(Color::Green),
         text(" 󰕏 -w, --watch            Watch directory continuously and organise new files as they appear\n" ) | color(Color::Green),
-        text(" 󰕌 u, --undo             Undo the last batch of moves\n") | color(Color::Green),
+        text(" 󰕌 -u, --undo             Undo the last batch of moves\n") | color(Color::Green),
         text(" 󰞷 -h, --help             Display this help message\n" ) | color(Color::Cyan),
         text(" 󰏖    --version          Display version information\n" ) | color(Color::Blue)
 }) | borderStyled(ROUNDED, Color::GrayLight);
