@@ -2,7 +2,7 @@
 #include "organise/options.hpp"
 #include "organise/organiser.hpp"
 #include "organise/history.hpp"
-#include "organise/colors.hpp"
+#include "organise/xcolors.hpp"
 #include "organise/version.hpp"
 #include <iostream>
 #include <ftxui/dom/elements.hpp>  // for operator|, text, Element, Fit, borderDouble, borderHeavy, borderLight, borderRounded, vbox

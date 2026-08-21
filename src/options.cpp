@@ -1,6 +1,6 @@
 #include "organise/options.hpp"
 #include "organise/config.hpp"
-#include "organise/colors.hpp"
+#include "organise/xcolors.hpp"
 #include <iostream>
 #include <string_view>
 #include <ftxui/dom/elements.hpp>

@@ -1,5 +1,5 @@
 #include "organise/organiser.hpp"
-#include "organise/colors.hpp"
+#include "organise/xcolors.hpp"
 #include <sys/inotify.h>
 #include <unistd.h>
 #include <iostream>
