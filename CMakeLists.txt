@@ -6,19 +6,18 @@ endif()
 
 project(organise VERSION 1.0.0 LANGUAGES CXX)
 
-# ---- C++17 ----
+# C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Build type padrão (evita binário sem otimização por engano)
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# ---- Dependências ----
+# Dependencies
 include(FetchContent)
 
 # nlohmann/json
@@ -28,7 +27,6 @@ FetchContent_Declare(
     URL_HASH SHA256=d6c65aca6b1ed68e7a182f4757257b107ae403032760ed6ef121c9d55e81757d
 )
 
-# FTXUI (TUI) — era isso que faltava
 set(FTXUI_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(FTXUI_BUILD_DOCS     OFF CACHE BOOL "" FORCE)
 set(FTXUI_BUILD_TESTS    OFF CACHE BOOL "" FORCE)
@@ -43,24 +41,18 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(nlohmann_json ftxui)
 
-# Threads (FTXUI component usa std::thread)
 find_package(Threads REQUIRED)
 
-# ---- Geração do version.hpp ----
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/organise/version.hpp.in
     ${CMAKE_CURRENT_BINARY_DIR}/generated/organise/version.hpp
     @ONLY
 )
 
-# ---- Executável ----
 set(SOURCES
     src/main.cpp
     src/config.cpp
-<<<<<<< Updated upstream
     src/options.cpp
-=======
->>>>>>> Stashed changes
     src/organiser.cpp
     src/options.cpp
     src/history.cpp
@@ -78,7 +70,7 @@ target_link_libraries(org PRIVATE
     nlohmann_json::nlohmann_json
     ftxui::screen
     ftxui::dom
-    ftxui::component      # remova se não usar Component/interatividade
+    ftxui::component
     Threads::Threads
 )
 
@@ -87,7 +79,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_L
     target_link_libraries(org PRIVATE stdc++fs)
 endif()
 
-# ---- Instalação ----
 include(GNUInstallDirs)
 
 install(TARGETS org RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
